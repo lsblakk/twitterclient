@@ -36,6 +36,10 @@
         "source": "/Users/lukas/.android/build-cache/bf0c05dcfe497b1186ed97f643b38dd006b9a84b/output/res/layout/abc_list_menu_item_icon.xml"
     },
     {
+        "merged": "/Users/lukas/codepath/TwitterClient/app/build/intermediates/res/merged/debug/layout/item_tweet.xml",
+        "source": "/Users/lukas/codepath/TwitterClient/app/src/main/res/layout/item_tweet.xml"
+    },
+    {
         "merged": "/Users/lukas/codepath/TwitterClient/app/build/intermediates/res/merged/debug/layout/abc_popup_menu_item_layout.xml",
         "source": "/Users/lukas/.android/build-cache/bf0c05dcfe497b1186ed97f643b38dd006b9a84b/output/res/layout/abc_popup_menu_item_layout.xml"
     },
