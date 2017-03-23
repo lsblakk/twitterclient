@@ -1,5 +1,5 @@
 #Internal package file, do not edit.
-#Thu Mar 23 09:00:00 PDT 2017
+#Thu Mar 23 11:01:06 PDT 2017
 210.set=ANDROID_RESOURCE
 14.set=ANDROID_RESOURCE
 180.file=/Users/lukas/codepath/TwitterClient/app/build/intermediates/res/resources-debug.ap_/res/layout-v17/abc_alert_dialog_button_bar_material.xml

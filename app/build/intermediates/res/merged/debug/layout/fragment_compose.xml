@@ -1,17 +1,27 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="vertical" android:layout_width="match_parent"
+    android:orientation="vertical" android:layout_width="wrap_content"
     android:layout_height="match_parent">
 
     <EditText
         android:id="@+id/etComposeBody"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="@string/tweet" />
+        android:hint="@string/compose"
+        android:minWidth="300dp"
+        android:minHeight="100dp"
+        android:lines="3"/>
+
+    <TextView
+        android:id="@+id/tvCharsRemain"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/chars_remain"
+        android:layout_alignParentRight="true"/>
 
     <Button
         android:id="@+id/btnTweet"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="match_parent"
         android:text="@string/tweet" />
 </LinearLayout>

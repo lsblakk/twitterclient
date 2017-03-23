@@ -1,6 +1,9 @@
 package com.codepath.apps.twitterclient.activities;
 
+import android.content.SharedPreferences;
+import android.preference.PreferenceManager;
 import android.support.v4.app.FragmentManager;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.GridLayoutManager;
@@ -22,6 +25,7 @@ import com.codepath.apps.twitterclient.models.Tweet;
 import com.codepath.apps.twitterclient.utils.DividerItemDecoration;
 import com.codepath.apps.twitterclient.utils.EndlessRecyclerViewScrollListener;
 import com.codepath.apps.twitterclient.utils.ItemClickSupport;
+import com.loopj.android.http.AsyncHttpResponseHandler;
 import com.loopj.android.http.JsonHttpResponseHandler;
 
 import org.json.JSONArray;
@@ -31,6 +35,7 @@ import org.parceler.Parcels;
 import java.util.ArrayList;
 
 import cz.msebera.android.httpclient.Header;
+import cz.msebera.android.httpclient.entity.mime.content.StringBody;
 
 public class TimelineActivity extends AppCompatActivity implements ComposeTweetFragment.ComposeDialogListener, TweetDetailFragment.TweetDetailsListener {
 
@@ -39,6 +44,8 @@ public class TimelineActivity extends AppCompatActivity implements ComposeTweetF
     private ArrayList<Tweet> tweets;
     private RecyclerView rvTweets;
     private EndlessRecyclerViewScrollListener scrollListener;
+    private SwipeRefreshLayout swipeContainer;
+
 
     // TODO - make links in tweets open in a ChromeTab
 
@@ -51,14 +58,32 @@ public class TimelineActivity extends AppCompatActivity implements ComposeTweetF
         tweets = new ArrayList<>();
         adapter = new TweetsArrayAdapter(this, tweets);
         rvTweets.setAdapter(adapter);
-        //LinearLayoutManager layoutManager = new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false);
-        StaggeredGridLayoutManager layoutManager = new StaggeredGridLayoutManager(1, StaggeredGridLayoutManager.VERTICAL);
-        layoutManager.setGapStrategy(StaggeredGridLayoutManager.GAP_HANDLING_MOVE_ITEMS_BETWEEN_SPANS);
+        LinearLayoutManager layoutManager = new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false);
+        //StaggeredGridLayoutManager layoutManager = new StaggeredGridLayoutManager(1, StaggeredGridLayoutManager.VERTICAL);
+        //layoutManager.setGapStrategy(StaggeredGridLayoutManager.GAP_HANDLING_MOVE_ITEMS_BETWEEN_SPANS);
         layoutManager.scrollToPosition(0);
         rvTweets.setLayoutManager(layoutManager);
         RecyclerView.ItemDecoration itemDecoration = new
                 DividerItemDecoration(this, DividerItemDecoration.VERTICAL_LIST);
         rvTweets.addItemDecoration(itemDecoration);
+
+        swipeContainer = (SwipeRefreshLayout) findViewById(R.id.swipeContainer);
+        // Setup refresh listener which triggers new data loading
+        swipeContainer.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                // Your code to refresh the list here.
+                // Make sure you call swipeContainer.setRefreshing(false)
+                // once the network request has completed successfully.
+                populateTimeline(0);
+            }
+        });
+        // Configure the refreshing colors
+        swipeContainer.setColorSchemeResources(android.R.color.holo_blue_bright,
+                android.R.color.holo_green_light,
+                android.R.color.holo_orange_light,
+                android.R.color.holo_red_light);
+
 
         // hook up click for RecyclerView
         ItemClickSupport.addTo(rvTweets).setOnItemClickListener(
@@ -81,20 +106,35 @@ public class TimelineActivity extends AppCompatActivity implements ComposeTweetF
             public void onLoadMore(int page, int totalItemsCount, RecyclerView view) {
                 // Triggered only when new data needs to be appended to the list
                 // Add whatever code is needed to append new items to the bottom of the list
-                loadNextDataFromApi(page);
+
+                // get the ID of the latest tweet
+                for (int i=0; i < tweets.size(); i++){
+                    Log.d("Debug tweet id: ", String.valueOf(tweets.get(i).getUid()));
+                }
+
+                SharedPreferences pref =
+                        PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
+                SharedPreferences.Editor edit = pref.edit();
+                edit.putLong("max_id", tweets.get(0).getUid());
+                Log.d("Debug max_id", String.valueOf(tweets.get(0).getUid()));
+                edit.putLong("since_id", tweets.get(tweets.size()-1).getUid());
+                Log.d("Debug since_id", String.valueOf(tweets.get(tweets.size()-1).getUid()));
+                edit.commit();
+
+                populateTimeline(page);
             }
         };
         // Add the scroll listener to RecyclerView
         rvTweets.addOnScrollListener(scrollListener);
 
         client = TwitterApplication.getRestClient();
-        populateTimeline();
+        populateTimeline(0);
 
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                // TODO launch a DialogFragment to compose a tweet with
+                // launch a DialogFragment to compose a tweet with
                 FragmentManager fm = getSupportFragmentManager();
                 ComposeTweetFragment composeTweetFragment = ComposeTweetFragment.newInstance();
                 composeTweetFragment.show(fm, "fragment_compose");
@@ -103,23 +143,12 @@ public class TimelineActivity extends AppCompatActivity implements ComposeTweetF
         });
     }
 
-    // Append the next page of data into the adapter
-    // This method probably sends out a network request and appends new data items to your adapter.
-    public void loadNextDataFromApi(int offset) {
-        // Send an API request to retrieve appropriate paginated data
-        //  --> Send the request including an offset value (i.e `page`) as a query parameter.
-        //  --> Deserialize and construct new model objects from the API response
-        //  --> Append the new data objects to the existing set of items inside the array of items
-        //  --> Notify the adapter of the new items made with `notifyItemRangeInserted()`
-        // TODO call populateTimeline() with new page
-    }
-
     // Send an API request to get timeline jason
-    // Fill the listview by creating the tweet objects
-    private void populateTimeline(){
+    // Fill the RecyclerView by creating the tweet objects
+    private void populateTimeline(int page){
 
         // TODO - be able to call getHomeTimeline with a page value
-        client.getHomeTimeline(new JsonHttpResponseHandler() {
+        client.getHomeTimeline(page, new JsonHttpResponseHandler() {
             // SUCCESS
             @Override
             public void onSuccess(int statusCode, Header[] headers, JSONArray json) {
@@ -139,9 +168,13 @@ public class TimelineActivity extends AppCompatActivity implements ComposeTweetF
                     tweets.addAll(Tweet.fromJSONArray(json));
                     adapter = new TweetsArrayAdapter(getApplicationContext(), tweets);
                     rvTweets.setAdapter(adapter);
+
+                    // set maxId for the next call to API
+
                 } else {
                     adapter.notifyItemRangeInserted(curSize, tweets.size());
                 }
+                swipeContainer.setRefreshing(false);
             }
 
 
@@ -156,7 +189,21 @@ public class TimelineActivity extends AppCompatActivity implements ComposeTweetF
     @Override
     public void onFinishComposeDialog(String message) {
         // TODO handle the new tweet coming back from compose here, put up a Toast for submitted
-        Toast.makeText(this, message, Toast.LENGTH_LONG).show();
+        if (message.isEmpty()){
+            Toast.makeText(this, "Can't tweet nothing!", Toast.LENGTH_LONG).show();
+        } else {
+            client.composeTweet(message, new JsonHttpResponseHandler () {
+                @Override
+                public void onSuccess(int statusCode, Header[] headers, JSONObject json) {
+                    Toast.makeText(getApplicationContext(), getString(R.string.tweet_success), Toast.LENGTH_LONG).show();
+                }
+
+                @Override
+                public void onFailure(int statusCode, Header[] headers, Throwable throwable, JSONObject errorResponse) {
+                    Log.d("DEBUG", errorResponse.toString());
+                }
+            });
+        }
     }
     @Override
     public void onCloseTweetDetail() {

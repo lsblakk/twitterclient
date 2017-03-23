@@ -5,9 +5,12 @@ import org.scribe.builder.api.FlickrApi;
 import org.scribe.builder.api.TwitterApi;
 
 import android.content.Context;
+import android.content.SharedPreferences;
+import android.preference.PreferenceManager;
 
 import com.codepath.oauth.OAuthBaseClient;
 import com.loopj.android.http.AsyncHttpResponseHandler;
+import com.loopj.android.http.JsonHttpResponseHandler;
 import com.loopj.android.http.RequestParams;
 
 /*
@@ -23,35 +26,47 @@ import com.loopj.android.http.RequestParams;
  * 
  */
 public class TwitterClient extends OAuthBaseClient {
+
 	public static final Class<? extends Api> REST_API_CLASS = TwitterApi.class;
-	public static final String REST_URL = "https://api.twitter.com/1.1/";
-	public static final String REST_CONSUMER_KEY = "L797gzGfi6c0b8zQGpGbUta1p";
-	public static final String REST_CONSUMER_SECRET = "uutitvAn6Drw0EirURqT30YZ4FXjpTxQf16qy79WvEvPnlYARe";
+	public static final String REST_URL = "https://api.twitter.com/1.1";
+	public static final String REST_CONSUMER_KEY = "nmuR6t2nLA2Zb65Uz5imCGyrb";
+	public static final String REST_CONSUMER_SECRET = "xiZrv3WgbIS8fYDPQvELp9lpR2x1Rt3f3ODKaAFvgaPibjTjLq";
 	public static final String REST_CALLBACK_URL = "oauth://cptwitterclient"; // Change this (here and in manifest)
 
-	public TwitterClient(Context context) {
+    SharedPreferences pref =
+            PreferenceManager.getDefaultSharedPreferences(context);
+
+    public TwitterClient(Context context) {
 		super(context, REST_API_CLASS, REST_URL, REST_CONSUMER_KEY, REST_CONSUMER_SECRET, REST_CALLBACK_URL);
 	}
 
     // HomeTimeline - Gets us the home timeline data
-	public void getHomeTimeline(AsyncHttpResponseHandler handler){
+	public void getHomeTimeline(int page, AsyncHttpResponseHandler handler){
 		String apiUrl = getApiUrl("statuses/home_timeline.json");
+        long sinceId = 1;
 		// Specify params
 		RequestParams params = new RequestParams();
-		params.put("count", 25);
-		params.put("since_id", 1);
+        // A "page" will be 25 tweets
+        params.put("count", 25);
+
+        // Use since_id to hold the processed tweets and max_id to hold the
+        long maxId = pref.getLong("max_id", 1);
+        if (page != 0){
+            sinceId = pref.getLong("since_id", 1);
+            params.put("max_id", maxId);
+        }
+        params.put("since_id", sinceId);
 		// Execute the request
 		client.get(apiUrl, params, handler);
 	}
 
-	// Method here for Composing Tweet
+    public void composeTweet(String message, AsyncHttpResponseHandler handler) {
 
-	/* 1. Define the endpoint URL with getApiUrl and pass a relative path to the endpoint
-	 * 	  i.e getApiUrl("statuses/home_timeline.json");
-	 * 2. Define the parameters to pass to the request (query or body)
-	 *    i.e RequestParams params = new RequestParams("foo", "bar");
-	 * 3. Define the request method and make a call to the client
-	 *    i.e client.get(apiUrl, params, handler);
-	 *    i.e client.post(apiUrl, params, handler);
-	 */
+        String apiURL = getApiUrl("statuses/update.json");
+        RequestParams params = new RequestParams();
+        params.put("status", message);
+        client.post(apiURL, params, handler);
+
+    }
+
 }
