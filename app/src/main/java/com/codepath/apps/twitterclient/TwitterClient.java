@@ -43,19 +43,18 @@ public class TwitterClient extends OAuthBaseClient {
     // HomeTimeline - Gets us the home timeline data
 	public void getHomeTimeline(int page, AsyncHttpResponseHandler handler){
 		String apiUrl = getApiUrl("statuses/home_timeline.json");
-        long sinceId = 1;
-		// Specify params
 		RequestParams params = new RequestParams();
         // A "page" will be 25 tweets
-        params.put("count", 25);
+        params.put("count", 50);
 
         // Use since_id to hold the processed tweets and max_id to hold the
         long maxId = pref.getLong("max_id", 1);
-        if (page != 0){
-            sinceId = pref.getLong("since_id", 1);
+        if (page == 0 || page == -1){
+            // Refresh or new load of timeline, want the newest tweets
+            params.put("since_id", 1);
+        } else {
             params.put("max_id", maxId);
         }
-        params.put("since_id", sinceId);
 		// Execute the request
 		client.get(apiUrl, params, handler);
 	}

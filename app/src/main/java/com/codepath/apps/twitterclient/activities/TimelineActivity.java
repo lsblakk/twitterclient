@@ -6,10 +6,8 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.support.v7.widget.StaggeredGridLayoutManager;
 import android.util.Log;
 import android.view.View;
 import android.support.design.widget.FloatingActionButton;
@@ -25,7 +23,6 @@ import com.codepath.apps.twitterclient.models.Tweet;
 import com.codepath.apps.twitterclient.utils.DividerItemDecoration;
 import com.codepath.apps.twitterclient.utils.EndlessRecyclerViewScrollListener;
 import com.codepath.apps.twitterclient.utils.ItemClickSupport;
-import com.loopj.android.http.AsyncHttpResponseHandler;
 import com.loopj.android.http.JsonHttpResponseHandler;
 
 import org.json.JSONArray;
@@ -35,10 +32,10 @@ import org.parceler.Parcels;
 import java.util.ArrayList;
 
 import cz.msebera.android.httpclient.Header;
-import cz.msebera.android.httpclient.entity.mime.content.StringBody;
 
 public class TimelineActivity extends AppCompatActivity implements ComposeTweetFragment.ComposeDialogListener, TweetDetailFragment.TweetDetailsListener {
 
+    private Boolean refresh;
     private TwitterClient client;
     private TweetsArrayAdapter adapter;
     private ArrayList<Tweet> tweets;
@@ -46,46 +43,42 @@ public class TimelineActivity extends AppCompatActivity implements ComposeTweetF
     private EndlessRecyclerViewScrollListener scrollListener;
     private SwipeRefreshLayout swipeContainer;
 
-
-    // TODO - make links in tweets open in a ChromeTab
+    SharedPreferences pref;
+    SharedPreferences.Editor edit;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_timeline);
 
-        rvTweets = (RecyclerView) findViewById(R.id.rvTweets);
+        // Preference manager
+        pref = PreferenceManager.getDefaultSharedPreferences(this);
+        edit = pref.edit();
+
         tweets = new ArrayList<>();
         adapter = new TweetsArrayAdapter(this, tweets);
+
+        // RecyclerView
+        rvTweets = (RecyclerView) findViewById(R.id.rvTweets);
         rvTweets.setAdapter(adapter);
         LinearLayoutManager layoutManager = new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false);
-        //StaggeredGridLayoutManager layoutManager = new StaggeredGridLayoutManager(1, StaggeredGridLayoutManager.VERTICAL);
-        //layoutManager.setGapStrategy(StaggeredGridLayoutManager.GAP_HANDLING_MOVE_ITEMS_BETWEEN_SPANS);
         layoutManager.scrollToPosition(0);
         rvTweets.setLayoutManager(layoutManager);
         RecyclerView.ItemDecoration itemDecoration = new
                 DividerItemDecoration(this, DividerItemDecoration.VERTICAL_LIST);
         rvTweets.addItemDecoration(itemDecoration);
 
+        // Swipe to refresh container
         swipeContainer = (SwipeRefreshLayout) findViewById(R.id.swipeContainer);
         // Setup refresh listener which triggers new data loading
         swipeContainer.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
-                // Your code to refresh the list here.
-                // Make sure you call swipeContainer.setRefreshing(false)
-                // once the network request has completed successfully.
-                populateTimeline(0);
+                populateTimeline(-1);
             }
         });
-        // Configure the refreshing colors
-        swipeContainer.setColorSchemeResources(android.R.color.holo_blue_bright,
-                android.R.color.holo_green_light,
-                android.R.color.holo_orange_light,
-                android.R.color.holo_red_light);
 
-
-        // hook up click for RecyclerView
+        // hook up item click for RecyclerView
         ItemClickSupport.addTo(rvTweets).setOnItemClickListener(
                 new ItemClickSupport.OnItemClickListener() {
                     @Override
@@ -106,48 +99,48 @@ public class TimelineActivity extends AppCompatActivity implements ComposeTweetF
             public void onLoadMore(int page, int totalItemsCount, RecyclerView view) {
                 // Triggered only when new data needs to be appended to the list
                 // Add whatever code is needed to append new items to the bottom of the list
-
-                // get the ID of the latest tweet
-                for (int i=0; i < tweets.size(); i++){
-                    Log.d("Debug tweet id: ", String.valueOf(tweets.get(i).getUid()));
-                }
-
-                SharedPreferences pref =
-                        PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
-                SharedPreferences.Editor edit = pref.edit();
-                edit.putLong("max_id", tweets.get(0).getUid());
-                Log.d("Debug max_id", String.valueOf(tweets.get(0).getUid()));
-                edit.putLong("since_id", tweets.get(tweets.size()-1).getUid());
-                Log.d("Debug since_id", String.valueOf(tweets.get(tweets.size()-1).getUid()));
-                edit.commit();
-
                 populateTimeline(page);
             }
         };
         // Add the scroll listener to RecyclerView
         rvTweets.addOnScrollListener(scrollListener);
 
+        // Set a client for making API calls
         client = TwitterApplication.getRestClient();
-        populateTimeline(0);
 
+        // Compose button
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                // launch a DialogFragment to compose a tweet with
                 FragmentManager fm = getSupportFragmentManager();
                 ComposeTweetFragment composeTweetFragment = ComposeTweetFragment.newInstance();
                 composeTweetFragment.show(fm, "fragment_compose");
-                // TODO Refresh the timeline to show this new tweet
             }
         });
+
+        // Get the initial homefeed on load
+        populateTimeline(0);
+    }
+
+    private void setPagination() {
+        edit.putLong("max_id", tweets.get(tweets.size()-1).getUid());
+        Log.d("Debug max_id", String.valueOf(tweets.get(tweets.size()-1).getUid()));
+        edit.putLong("since_id", tweets.get(0).getUid());
+        Log.d("Debug since_id", String.valueOf(tweets.get(0).getUid()));
+        edit.commit();
     }
 
     // Send an API request to get timeline jason
     // Fill the RecyclerView by creating the tweet objects
     private void populateTimeline(int page){
 
-        // TODO - be able to call getHomeTimeline with a page value
+        if (page == -1){
+            refresh = true;
+        } else {
+            refresh = false;
+        }
+
         client.getHomeTimeline(page, new JsonHttpResponseHandler() {
             // SUCCESS
             @Override
@@ -155,9 +148,7 @@ public class TimelineActivity extends AppCompatActivity implements ComposeTweetF
 
                 int curSize = adapter.getItemCount();
 
-                tweets.addAll(Tweet.fromJSONArray(json));
-
-                if (curSize == 0){
+                if (curSize == 0 || refresh){
                     // 1. First, clear the array of data
                     tweets.clear();
                     // 2. Notify the adapter of the update
@@ -168,15 +159,14 @@ public class TimelineActivity extends AppCompatActivity implements ComposeTweetF
                     tweets.addAll(Tweet.fromJSONArray(json));
                     adapter = new TweetsArrayAdapter(getApplicationContext(), tweets);
                     rvTweets.setAdapter(adapter);
-
-                    // set maxId for the next call to API
-
+                    setPagination();
                 } else {
+                    tweets.addAll(Tweet.fromJSONArray(json));
                     adapter.notifyItemRangeInserted(curSize, tweets.size());
                 }
+
                 swipeContainer.setRefreshing(false);
             }
-
 
             // FAILURE
             @Override
@@ -196,6 +186,8 @@ public class TimelineActivity extends AppCompatActivity implements ComposeTweetF
                 @Override
                 public void onSuccess(int statusCode, Header[] headers, JSONObject json) {
                     Toast.makeText(getApplicationContext(), getString(R.string.tweet_success), Toast.LENGTH_LONG).show();
+                    // refresh timeline here to show the new tweet
+                    populateTimeline(-1);
                 }
 
                 @Override
@@ -207,7 +199,7 @@ public class TimelineActivity extends AppCompatActivity implements ComposeTweetF
     }
     @Override
     public void onCloseTweetDetail() {
-        // TODO handle returning from tweet detail view (might be nothing to do here)
+        // nothing to do here right now
     }
 
 }

@@ -17,13 +17,13 @@ The following **required** functionality is completed:
 * [x] User can **compose and post a new tweet**
   * [x] User can click a “Compose” [FloatingActionButton](https://github.com/codepath/android_guides/wiki/Floating-Action-Buttons) instead of on the AppBar
   * [x] User can then enter a new tweet and post this to twitter
-  * [ ] User is taken back to home timeline with **new tweet visible** in timeline
+  * [x] User is taken back to home timeline with **new tweet visible** in timeline
 
 The following **optional** features are implemented:
 
 * [ ] User can **see a counter with total number of characters left for tweet** on compose tweet page
 * [ ] User can **click a link within a tweet body** on tweet details view. The click will launch the web browser with relevant page opened.
-* [ ] User can **pull down to refresh tweets timeline**
+* [x] User can **pull down to refresh tweets timeline**
 * [ ] User can **open the twitter app offline and see last loaded tweets**. Persisted in SQLite tweets are refreshed on every application launch. While "live data" is displayed when app can get it from Twitter API, it is also saved for use in offline mode.
 * [x] User can tap a tweet to **open a detailed tweet view**
 * [ ] User can **select "reply" from detail view to respond to a tweet**
@@ -45,7 +45,7 @@ The following **bonus** features are implemented:
 
 The following **additional** features are implemented:
 
-* [ ] List anything else that you can get done to improve the app functionality!
+* [x] Tried out using CardView for more distinct layout
 
 ## Video Walkthrough
 
@@ -63,6 +63,7 @@ Describe any challenges encountered while building the app.
 
 - [Android Async HTTP](https://github.com/loopj/android-async-http) - Simple asynchronous HTTP requests with JSON parsing
 - [Picasso](http://square.github.io/picasso/) - Image loading and caching library for Android
+- [Parceler](http://parceler.org)
 
 ## License
 
