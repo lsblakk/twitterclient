@@ -51,13 +51,13 @@ The following **additional** features are implemented:
 
 Here's a walkthrough of implemented user stories:
 
-<img src='http://i.imgur.com/link/to/your/gif/file.gif' title='Video Walkthrough' width='' alt='Video Walkthrough' />
+<img src='https://github.com/lsblakk/twitterclient/blob/master/twitterclient.gif' title='Video Walkthrough' width='' alt='Video Walkthrough' />
 
 GIF created with [LiceCap](http://www.cockos.com/licecap/).
 
 ## Notes
 
-Describe any challenges encountered while building the app.
+This week I had less time to work on the assignemnt so I plan to return to this and finish more of the stretch options since this is a really fun project to work on (Twitter API rate limiting aside).
 
 ## Open-source libraries used
 
