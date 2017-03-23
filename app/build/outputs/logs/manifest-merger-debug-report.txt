@@ -32,6 +32,8 @@ MERGED from [com.android.support.constraint:constraint-layout:1.0.2] /Users/luka
 MERGED from [com.android.support:recyclerview-v7:25.2.0] /Users/lukas/.android/build-cache/e7c34da830f267c2fc330509a29be01f53905368/output/AndroidManifest.xml:20:5-43
 MERGED from [com.android.support:support-core-ui:25.2.0] /Users/lukas/.android/build-cache/5b6cd61fc712a01d2e47aad9868c5bf76101a2bd/output/AndroidManifest.xml:21:5-23:58
 MERGED from [com.android.support:support-compat:25.2.0] /Users/lukas/.android/build-cache/550e94db0e6a3698c6f8e15bab15bb9d95ebfe4c/output/AndroidManifest.xml:21:5-23:58
+MERGED from [com.android.support:cardview-v7:25.2.0] /Users/lukas/.android/build-cache/3bb9f338a42f340661675a856aa084f880452fad/output/AndroidManifest.xml:20:5-43
+MERGED from [jp.wasabeef:picasso-transformations:2.1.0] /Users/lukas/.android/build-cache/11bcd2349dadec8480cf24748c398532acc41ba7/output/AndroidManifest.xml:8:5-10:41
 	tools:overrideLibrary
 		ADDED from [com.android.support:design:25.2.0] /Users/lukas/.android/build-cache/40d76cbb5b04e6266efc77e73ca7bb58ad5e08f3/output/AndroidManifest.xml:23:9-59
 	android:targetSdkVersion
@@ -73,6 +75,7 @@ MERGED from [com.android.support:support-vector-drawable:25.2.0] /Users/lukas/.a
 MERGED from [com.android.support.constraint:constraint-layout:1.0.2] /Users/lukas/.android/build-cache/a21fcac316a67229ffeb988fef3eaeaa6d188a1f/output/AndroidManifest.xml:9:5-20
 MERGED from [com.android.support:support-core-ui:25.2.0] /Users/lukas/.android/build-cache/5b6cd61fc712a01d2e47aad9868c5bf76101a2bd/output/AndroidManifest.xml:25:5-20
 MERGED from [com.android.support:support-compat:25.2.0] /Users/lukas/.android/build-cache/550e94db0e6a3698c6f8e15bab15bb9d95ebfe4c/output/AndroidManifest.xml:25:5-20
+MERGED from [com.android.support:cardview-v7:25.2.0] /Users/lukas/.android/build-cache/3bb9f338a42f340661675a856aa084f880452fad/output/AndroidManifest.xml:22:5-20
 	android:label
 		ADDED from /Users/lukas/codepath/TwitterClient/app/src/main/AndroidManifest.xml:20:9-41
 	android:allowBackup

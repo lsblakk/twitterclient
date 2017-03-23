@@ -2,6 +2,8 @@ package com.codepath.apps.twitterclient.adapters;
 
 import android.content.Context;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.CardView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -15,6 +17,8 @@ import com.squareup.picasso.Picasso;
 
 import java.util.List;
 
+import jp.wasabeef.picasso.transformations.RoundedCornersTransformation;
+
 /**
  * Created by lukas on 3/21/17.
  */
@@ -24,6 +28,7 @@ public class TweetsArrayAdapter extends RecyclerView.Adapter<TweetsArrayAdapter.
 
     public static class ViewHolder extends RecyclerView.ViewHolder {
 
+        public CardView cvTweets;
         public TextView tvBody;
         public TextView tvUsername;
         public TextView tvTimestamp;
@@ -33,6 +38,7 @@ public class TweetsArrayAdapter extends RecyclerView.Adapter<TweetsArrayAdapter.
 
             super(itemView);
 
+            cvTweets = (CardView) itemView.findViewById(R.id.cvTweets);
             tvBody = (TextView) itemView.findViewById(R.id.tvBody);
             tvUsername = (TextView) itemView.findViewById(R.id.tvUsername);
             tvTimestamp = (TextView) itemView.findViewById(R.id.tvTimestamp);
@@ -72,13 +78,14 @@ public class TweetsArrayAdapter extends RecyclerView.Adapter<TweetsArrayAdapter.
 
         TextView tvBody = holder.tvBody;
         tvBody.setText(tweet.getBody());
+        tvBody.setMinimumHeight(tvBody.getLineHeight());
 
         TextView tvTimestamp = holder.tvTimestamp;
         tvTimestamp.setText((tweet.getRelativeTimeAgo(tweet.getCreatedAt())));
 
         ImageView ivProfileImage = holder.ivProfileImage;
         ivProfileImage.setImageResource(android.R.color.transparent); // clear out old image
-        Picasso.with(getContext()).load(tweet.getUser().getProfileImageUrl()).into(ivProfileImage);
+        Picasso.with(getContext()).load(tweet.getUser().getProfileImageUrl()).fit().transform(new RoundedCornersTransformation(10, 10)).into(ivProfileImage);
 
     }
 

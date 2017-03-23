@@ -3,8 +3,10 @@ package com.codepath.apps.twitterclient.activities;
 import android.support.v4.app.FragmentManager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.StaggeredGridLayoutManager;
 import android.util.Log;
 import android.view.View;
 import android.support.design.widget.FloatingActionButton;
@@ -49,11 +51,11 @@ public class TimelineActivity extends AppCompatActivity implements ComposeTweetF
         tweets = new ArrayList<>();
         adapter = new TweetsArrayAdapter(this, tweets);
         rvTweets.setAdapter(adapter);
-        LinearLayoutManager layoutManager = new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false);
+        //LinearLayoutManager layoutManager = new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false);
+        StaggeredGridLayoutManager layoutManager = new StaggeredGridLayoutManager(1, StaggeredGridLayoutManager.VERTICAL);
+        layoutManager.setGapStrategy(StaggeredGridLayoutManager.GAP_HANDLING_MOVE_ITEMS_BETWEEN_SPANS);
         layoutManager.scrollToPosition(0);
         rvTweets.setLayoutManager(layoutManager);
-        // For increased performance
-        rvTweets.setHasFixedSize(true);
         RecyclerView.ItemDecoration itemDecoration = new
                 DividerItemDecoration(this, DividerItemDecoration.VERTICAL_LIST);
         rvTweets.addItemDecoration(itemDecoration);
