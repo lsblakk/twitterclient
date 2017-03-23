@@ -2,6 +2,7 @@ package com.codepath.apps.twitterclient.models;
 
 import org.json.JSONException;
 import org.json.JSONObject;
+import org.parceler.Parcel;
 
 /**
  * Created by lukas on 3/21/17.
@@ -22,7 +23,7 @@ import org.json.JSONObject;
     "profile_link_color": "FF3300",
 
  */
-
+@Parcel
 public class User {
     public String getName() {
         return name;
@@ -52,14 +53,17 @@ public class User {
         return profileImageUrl;
     }
 
+    // empty constructor needed by the Parceler library
+    public User() {}
+
     public void setProfileImageUrl(String profileImageUrl) {
         this.profileImageUrl = profileImageUrl;
     }
 
-    private String name;
-    private long uid;
-    private String screenname;
-    private String profileImageUrl;
+    public String name;
+    public long uid;
+    public String screenname;
+    public String profileImageUrl;
 
 
     public static User fromJSON(JSONObject json){

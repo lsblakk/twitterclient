@@ -8,6 +8,10 @@
         "source": "/Users/lukas/.android/build-cache/bf0c05dcfe497b1186ed97f643b38dd006b9a84b/output/res/color/switch_thumb_material_dark.xml"
     },
     {
+        "merged": "/Users/lukas/codepath/TwitterClient/app/build/intermediates/res/merged/debug/color/design_error.xml",
+        "source": "/Users/lukas/.android/build-cache/40d76cbb5b04e6266efc77e73ca7bb58ad5e08f3/output/res/color/design_error.xml"
+    },
+    {
         "merged": "/Users/lukas/codepath/TwitterClient/app/build/intermediates/res/merged/debug/color/abc_tint_default.xml",
         "source": "/Users/lukas/.android/build-cache/bf0c05dcfe497b1186ed97f643b38dd006b9a84b/output/res/color/abc_tint_default.xml"
     },
@@ -22,6 +26,10 @@
     {
         "merged": "/Users/lukas/codepath/TwitterClient/app/build/intermediates/res/merged/debug/color/abc_tint_switch_track.xml",
         "source": "/Users/lukas/.android/build-cache/bf0c05dcfe497b1186ed97f643b38dd006b9a84b/output/res/color/abc_tint_switch_track.xml"
+    },
+    {
+        "merged": "/Users/lukas/codepath/TwitterClient/app/build/intermediates/res/merged/debug/color/design_tint_password_toggle.xml",
+        "source": "/Users/lukas/.android/build-cache/40d76cbb5b04e6266efc77e73ca7bb58ad5e08f3/output/res/color/design_tint_password_toggle.xml"
     },
     {
         "merged": "/Users/lukas/codepath/TwitterClient/app/build/intermediates/res/merged/debug/color/abc_tint_btn_checkable.xml",

@@ -17,20 +17,23 @@ ADDED from /Users/lukas/codepath/TwitterClient/app/src/main/AndroidManifest.xml:
 		ADDED from /Users/lukas/codepath/TwitterClient/app/src/main/AndroidManifest.xml:2:11-69
 uses-sdk
 ADDED from /Users/lukas/codepath/TwitterClient/app/src/main/AndroidManifest.xml:7:5-9:41
+MERGED from [com.android.support:design:25.2.0] /Users/lukas/.android/build-cache/40d76cbb5b04e6266efc77e73ca7bb58ad5e08f3/output/AndroidManifest.xml:21:5-23:62
+MERGED from [com.android.support:transition:25.2.0] /Users/lukas/.android/build-cache/772f620312f33d37eaec7da193716007df806a35/output/AndroidManifest.xml:20:5-44
 MERGED from [com.github.Raizlabs.DBFlow:dbflow:4.0.0-beta5] /Users/lukas/.android/build-cache/1ba7522ede8b20179fd2c04d3d10fbb5d9148b18/output/AndroidManifest.xml:7:5-9:41
 MERGED from [com.codepath.libraries:android-oauth-handler:1.1.0] /Users/lukas/.android/build-cache/fe3bd602bcf619f57d4953a4891344df82e80354/output/AndroidManifest.xml:7:5-9:41
 MERGED from [com.android.support:appcompat-v7:25.2.0] /Users/lukas/.android/build-cache/bf0c05dcfe497b1186ed97f643b38dd006b9a84b/output/AndroidManifest.xml:21:5-23:78
 MERGED from [com.android.support:support-v4:25.2.0] /Users/lukas/.android/build-cache/2e06e71aafb64455d9cd1e3b2f4f473cfb726804/output/AndroidManifest.xml:21:5-23:54
 MERGED from [com.android.support:support-fragment:25.2.0] /Users/lukas/.android/build-cache/58765893fd0196b7c26447b0f5589f4bb5ae98b7/output/AndroidManifest.xml:21:5-23:60
 MERGED from [com.android.support:support-media-compat:25.2.0] /Users/lukas/.android/build-cache/4d5aeeb007ccd9c25ba2ef0909e8e27fcd05df77/output/AndroidManifest.xml:21:5-23:63
-MERGED from [com.android.support:support-core-ui:25.2.0] /Users/lukas/.android/build-cache/5b6cd61fc712a01d2e47aad9868c5bf76101a2bd/output/AndroidManifest.xml:21:5-23:58
 MERGED from [com.android.support:support-core-utils:25.2.0] /Users/lukas/.android/build-cache/699db1341b90f214391bf2516788dd6147d92785/output/AndroidManifest.xml:21:5-23:61
 MERGED from [com.android.support:animated-vector-drawable:25.2.0] /Users/lukas/.android/build-cache/c86c91a217650dfb994b5b86f4e7532f4982f66d/output/AndroidManifest.xml:20:5-44
 MERGED from [com.android.support:support-vector-drawable:25.2.0] /Users/lukas/.android/build-cache/828be175662d87813418c8ae1c39de04ed79f8b6/output/AndroidManifest.xml:21:5-43
-MERGED from [com.android.support:support-compat:25.2.0] /Users/lukas/.android/build-cache/550e94db0e6a3698c6f8e15bab15bb9d95ebfe4c/output/AndroidManifest.xml:21:5-23:58
 MERGED from [com.android.support.constraint:constraint-layout:1.0.2] /Users/lukas/.android/build-cache/a21fcac316a67229ffeb988fef3eaeaa6d188a1f/output/AndroidManifest.xml:5:5-7:41
+MERGED from [com.android.support:recyclerview-v7:25.2.0] /Users/lukas/.android/build-cache/e7c34da830f267c2fc330509a29be01f53905368/output/AndroidManifest.xml:20:5-43
+MERGED from [com.android.support:support-core-ui:25.2.0] /Users/lukas/.android/build-cache/5b6cd61fc712a01d2e47aad9868c5bf76101a2bd/output/AndroidManifest.xml:21:5-23:58
+MERGED from [com.android.support:support-compat:25.2.0] /Users/lukas/.android/build-cache/550e94db0e6a3698c6f8e15bab15bb9d95ebfe4c/output/AndroidManifest.xml:21:5-23:58
 	tools:overrideLibrary
-		ADDED from [com.android.support:appcompat-v7:25.2.0] /Users/lukas/.android/build-cache/bf0c05dcfe497b1186ed97f643b38dd006b9a84b/output/AndroidManifest.xml:23:9-75
+		ADDED from [com.android.support:design:25.2.0] /Users/lukas/.android/build-cache/40d76cbb5b04e6266efc77e73ca7bb58ad5e08f3/output/AndroidManifest.xml:23:9-59
 	android:targetSdkVersion
 		ADDED from /Users/lukas/codepath/TwitterClient/app/src/main/AndroidManifest.xml:9:9-38
 		INJECTED from /Users/lukas/codepath/TwitterClient/app/src/main/AndroidManifest.xml
@@ -57,17 +60,19 @@ ADDED from /Users/lukas/codepath/TwitterClient/app/src/main/AndroidManifest.xml:
 		ADDED from /Users/lukas/codepath/TwitterClient/app/src/main/AndroidManifest.xml:14:22-77
 application
 ADDED from /Users/lukas/codepath/TwitterClient/app/src/main/AndroidManifest.xml:16:5-46:19
+MERGED from [com.android.support:design:25.2.0] /Users/lukas/.android/build-cache/40d76cbb5b04e6266efc77e73ca7bb58ad5e08f3/output/AndroidManifest.xml:25:5-20
+MERGED from [com.android.support:transition:25.2.0] /Users/lukas/.android/build-cache/772f620312f33d37eaec7da193716007df806a35/output/AndroidManifest.xml:22:5-20
 MERGED from [com.github.Raizlabs.DBFlow:dbflow:4.0.0-beta5] /Users/lukas/.android/build-cache/1ba7522ede8b20179fd2c04d3d10fbb5d9148b18/output/AndroidManifest.xml:11:5-20
 MERGED from [com.android.support:appcompat-v7:25.2.0] /Users/lukas/.android/build-cache/bf0c05dcfe497b1186ed97f643b38dd006b9a84b/output/AndroidManifest.xml:25:5-20
 MERGED from [com.android.support:support-v4:25.2.0] /Users/lukas/.android/build-cache/2e06e71aafb64455d9cd1e3b2f4f473cfb726804/output/AndroidManifest.xml:25:5-20
 MERGED from [com.android.support:support-fragment:25.2.0] /Users/lukas/.android/build-cache/58765893fd0196b7c26447b0f5589f4bb5ae98b7/output/AndroidManifest.xml:25:5-20
 MERGED from [com.android.support:support-media-compat:25.2.0] /Users/lukas/.android/build-cache/4d5aeeb007ccd9c25ba2ef0909e8e27fcd05df77/output/AndroidManifest.xml:25:5-20
-MERGED from [com.android.support:support-core-ui:25.2.0] /Users/lukas/.android/build-cache/5b6cd61fc712a01d2e47aad9868c5bf76101a2bd/output/AndroidManifest.xml:25:5-20
 MERGED from [com.android.support:support-core-utils:25.2.0] /Users/lukas/.android/build-cache/699db1341b90f214391bf2516788dd6147d92785/output/AndroidManifest.xml:25:5-20
 MERGED from [com.android.support:animated-vector-drawable:25.2.0] /Users/lukas/.android/build-cache/c86c91a217650dfb994b5b86f4e7532f4982f66d/output/AndroidManifest.xml:22:5-20
 MERGED from [com.android.support:support-vector-drawable:25.2.0] /Users/lukas/.android/build-cache/828be175662d87813418c8ae1c39de04ed79f8b6/output/AndroidManifest.xml:23:5-20
-MERGED from [com.android.support:support-compat:25.2.0] /Users/lukas/.android/build-cache/550e94db0e6a3698c6f8e15bab15bb9d95ebfe4c/output/AndroidManifest.xml:25:5-20
 MERGED from [com.android.support.constraint:constraint-layout:1.0.2] /Users/lukas/.android/build-cache/a21fcac316a67229ffeb988fef3eaeaa6d188a1f/output/AndroidManifest.xml:9:5-20
+MERGED from [com.android.support:support-core-ui:25.2.0] /Users/lukas/.android/build-cache/5b6cd61fc712a01d2e47aad9868c5bf76101a2bd/output/AndroidManifest.xml:25:5-20
+MERGED from [com.android.support:support-compat:25.2.0] /Users/lukas/.android/build-cache/550e94db0e6a3698c6f8e15bab15bb9d95ebfe4c/output/AndroidManifest.xml:25:5-20
 	android:label
 		ADDED from /Users/lukas/codepath/TwitterClient/app/src/main/AndroidManifest.xml:20:9-41
 	android:allowBackup

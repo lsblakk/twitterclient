@@ -60,6 +60,10 @@
         "source": "/Users/lukas/.android/build-cache/bf0c05dcfe497b1186ed97f643b38dd006b9a84b/output/res/drawable-xxxhdpi-v4/abc_ic_star_half_black_16dp.png"
     },
     {
+        "merged": "/Users/lukas/codepath/TwitterClient/app/build/intermediates/res/merged/debug/drawable-xxxhdpi-v4/design_ic_visibility.png",
+        "source": "/Users/lukas/.android/build-cache/40d76cbb5b04e6266efc77e73ca7bb58ad5e08f3/output/res/drawable-xxxhdpi-v4/design_ic_visibility.png"
+    },
+    {
         "merged": "/Users/lukas/codepath/TwitterClient/app/build/intermediates/res/merged/debug/drawable-xxxhdpi-v4/abc_ic_menu_copy_mtrl_am_alpha.png",
         "source": "/Users/lukas/.android/build-cache/bf0c05dcfe497b1186ed97f643b38dd006b9a84b/output/res/drawable-xxxhdpi-v4/abc_ic_menu_copy_mtrl_am_alpha.png"
     },
@@ -102,5 +106,9 @@
     {
         "merged": "/Users/lukas/codepath/TwitterClient/app/build/intermediates/res/merged/debug/drawable-xxxhdpi-v4/abc_ic_menu_paste_mtrl_am_alpha.png",
         "source": "/Users/lukas/.android/build-cache/bf0c05dcfe497b1186ed97f643b38dd006b9a84b/output/res/drawable-xxxhdpi-v4/abc_ic_menu_paste_mtrl_am_alpha.png"
+    },
+    {
+        "merged": "/Users/lukas/codepath/TwitterClient/app/build/intermediates/res/merged/debug/drawable-xxxhdpi-v4/design_ic_visibility_off.png",
+        "source": "/Users/lukas/.android/build-cache/40d76cbb5b04e6266efc77e73ca7bb58ad5e08f3/output/res/drawable-xxxhdpi-v4/design_ic_visibility_off.png"
     }
 ]
