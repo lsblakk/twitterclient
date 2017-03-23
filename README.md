@@ -57,7 +57,7 @@ GIF created with [LiceCap](http://www.cockos.com/licecap/).
 
 ## Notes
 
-This week I had less time to work on the assignemnt so I plan to return to this and finish more of the stretch options since this is a really fun project to work on (Twitter API rate limiting aside).
+This week I had less time to work on the assignment so I plan to return to this and finish more of the stretch options since this is a really fun project to work on (Twitter API rate limiting aside).
 
 ## Open-source libraries used
 
