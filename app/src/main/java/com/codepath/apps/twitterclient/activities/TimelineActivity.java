@@ -54,6 +54,8 @@ public class TimelineActivity extends AppCompatActivity implements ComposeTweetF
         // Preference manager
         pref = PreferenceManager.getDefaultSharedPreferences(this);
         edit = pref.edit();
+        edit.putLong("since_id", 1);
+        edit.putLong("max_id", 1);
 
         tweets = new ArrayList<>();
         adapter = new TweetsArrayAdapter(this, tweets);
@@ -159,12 +161,11 @@ public class TimelineActivity extends AppCompatActivity implements ComposeTweetF
                     tweets.addAll(Tweet.fromJSONArray(json));
                     adapter = new TweetsArrayAdapter(getApplicationContext(), tweets);
                     rvTweets.setAdapter(adapter);
-                    setPagination();
                 } else {
                     tweets.addAll(Tweet.fromJSONArray(json));
                     adapter.notifyItemRangeInserted(curSize, tweets.size());
                 }
-
+                setPagination();
                 swipeContainer.setRefreshing(false);
             }
 
@@ -186,8 +187,15 @@ public class TimelineActivity extends AppCompatActivity implements ComposeTweetF
                 @Override
                 public void onSuccess(int statusCode, Header[] headers, JSONObject json) {
                     Toast.makeText(getApplicationContext(), getString(R.string.tweet_success), Toast.LENGTH_LONG).show();
+                    // Insert the tweet into rvTweets
+                    int curSize = adapter.getItemCount();
+                    Tweet tweet = Tweet.fromJSON(json);
+                    tweets.add(tweet);
+                    adapter.notifyItemRangeInserted(curSize, tweets.size());
+                    // Set scroll position to 0
+                    rvTweets.scrollTo(0,0);
                     // refresh timeline here to show the new tweet
-                    populateTimeline(-1);
+                    //populateTimeline(-1);
                 }
 
                 @Override

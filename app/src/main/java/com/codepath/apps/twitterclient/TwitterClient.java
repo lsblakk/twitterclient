@@ -49,10 +49,11 @@ public class TwitterClient extends OAuthBaseClient {
 
         // Use since_id to hold the processed tweets and max_id to hold the
         long maxId = pref.getLong("max_id", 1);
-        if (page == 0 || page == -1){
-            // Refresh or new load of timeline, want the newest tweets
+        if (page == -1){
+            // Refresh want the newest tweets
             params.put("since_id", 1);
-        } else {
+        }
+        if (page > 0) {
             params.put("max_id", maxId);
         }
 		// Execute the request
