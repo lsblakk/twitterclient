@@ -28,7 +28,6 @@ public class TweetsArrayAdapter extends RecyclerView.Adapter<TweetsArrayAdapter.
 
     public static class ViewHolder extends RecyclerView.ViewHolder {
 
-        public CardView cvTweets;
         public TextView tvBody;
         public TextView tvUsername;
         public TextView tvTimestamp;
@@ -38,7 +37,6 @@ public class TweetsArrayAdapter extends RecyclerView.Adapter<TweetsArrayAdapter.
 
             super(itemView);
 
-            cvTweets = (CardView) itemView.findViewById(R.id.cvTweets);
             tvBody = (TextView) itemView.findViewById(R.id.tvBody);
             tvUsername = (TextView) itemView.findViewById(R.id.tvUsername);
             tvTimestamp = (TextView) itemView.findViewById(R.id.tvTimestamp);
