@@ -54,6 +54,7 @@ public class TimelineActivity extends AppCompatActivity implements ComposeTweetF
         // Preference manager
         pref = PreferenceManager.getDefaultSharedPreferences(this);
         edit = pref.edit();
+        // reset these on opening the app
         edit.putLong("since_id", 1);
         edit.putLong("max_id", 1);
 
@@ -64,7 +65,7 @@ public class TimelineActivity extends AppCompatActivity implements ComposeTweetF
         rvTweets = (RecyclerView) findViewById(R.id.rvTweets);
         rvTweets.setAdapter(adapter);
         LinearLayoutManager layoutManager = new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false);
-        layoutManager.scrollToPosition(0);
+        layoutManager.scrollToPositionWithOffset(0,0);
         rvTweets.setLayoutManager(layoutManager);
         RecyclerView.ItemDecoration itemDecoration = new
                 DividerItemDecoration(this, DividerItemDecoration.VERTICAL_LIST);
@@ -187,15 +188,11 @@ public class TimelineActivity extends AppCompatActivity implements ComposeTweetF
                 @Override
                 public void onSuccess(int statusCode, Header[] headers, JSONObject json) {
                     Toast.makeText(getApplicationContext(), getString(R.string.tweet_success), Toast.LENGTH_LONG).show();
-                    // Insert the tweet into rvTweets
-                    int curSize = adapter.getItemCount();
+                    // Insert the tweet into rvTweets and scroll to top
                     Tweet tweet = Tweet.fromJSON(json);
-                    tweets.add(tweet);
-                    adapter.notifyItemRangeInserted(curSize, tweets.size());
-                    // Set scroll position to 0
-                    rvTweets.scrollTo(0,0);
-                    // refresh timeline here to show the new tweet
-                    //populateTimeline(-1);
+                    tweets.add(0, tweet);
+                    adapter.notifyItemInserted(0);
+                    rvTweets.scrollToPosition(0);
                 }
 
                 @Override
