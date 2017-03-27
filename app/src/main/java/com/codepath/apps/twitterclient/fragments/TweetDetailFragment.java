@@ -64,7 +64,7 @@ public class TweetDetailFragment extends DialogFragment {
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.item_tweet, container, false);
+        View view = inflater.inflate(R.layout.fragment_tweet_detail, container, false);
 
         Tweet tweet = Parcels.unwrap(getArguments().getParcelable("tweet"));
         mBody = (TextView) view.findViewById(R.id.tvBody);
