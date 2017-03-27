@@ -17,6 +17,8 @@ import java.util.List;
 
 import jp.wasabeef.picasso.transformations.RoundedCornersTransformation;
 
+import static com.codepath.apps.twitterclient.R.id.tvBody;
+
 /**
  * Created by lukas on 3/21/17.
  */
@@ -28,6 +30,7 @@ public class TweetsArrayAdapter extends RecyclerView.Adapter<TweetsArrayAdapter.
 
         public TextView tvBody;
         public TextView tvUsername;
+        public TextView tvName;
         public TextView tvTimestamp;
         public ImageView ivProfileImage;
 
@@ -37,6 +40,7 @@ public class TweetsArrayAdapter extends RecyclerView.Adapter<TweetsArrayAdapter.
 
             tvBody = (TextView) itemView.findViewById(R.id.tvBody);
             tvUsername = (TextView) itemView.findViewById(R.id.tvUsername);
+            tvName = (TextView) itemView.findViewById(R.id.tvName);
             tvTimestamp = (TextView) itemView.findViewById(R.id.tvTimestamp);
             ivProfileImage = (ImageView) itemView.findViewById(R.id.ivProfileImage);
         }
@@ -71,6 +75,9 @@ public class TweetsArrayAdapter extends RecyclerView.Adapter<TweetsArrayAdapter.
 
         TextView tvUsername = holder.tvUsername;
         tvUsername.setText(tweet.getUser().getScreenname());
+
+        TextView tvName = holder.tvName;
+        tvName.setText(tweet.getUser().getName());
 
         TextView tvBody = holder.tvBody;
         tvBody.setText(tweet.getBody());

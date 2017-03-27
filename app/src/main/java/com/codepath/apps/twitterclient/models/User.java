@@ -40,20 +40,8 @@ public class User extends BaseModel {
         this.name = name;
     }
 
-    public long getUid() {
-        return uid;
-    }
-
-    public void setUid(long uid) {
-        this.uid = uid;
-    }
-
     public String getScreenname() {
         return screenname;
-    }
-
-    public void setScreenname(String screenname) {
-        this.screenname = screenname;
     }
 
     public String getProfileImageUrl() {
@@ -86,7 +74,7 @@ public class User extends BaseModel {
         try {
             u.name = json.getString("name");
             u.uid = json.getLong("id");
-            u.screenname = json.getString("screen_name");
+            u.screenname = "(@" + json.getString("screen_name") + ")";
             u.profileImageUrl = json.getString("profile_image_url_https");
             u.save();
         } catch (JSONException e) {

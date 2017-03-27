@@ -197,7 +197,7 @@ public class TimelineActivity extends AppCompatActivity implements ComposeTweetF
             adapter = new TweetsArrayAdapter(getApplicationContext(), tweets);
             rvTweets.setAdapter(adapter);
             // a visual for "offline" mode
-            Snackbar.make(findViewById(android.R.id.content), "Currently offline - no new tweets to show", Snackbar.LENGTH_INDEFINITE).show();
+            Snackbar.make(findViewById(android.R.id.content), "Currently offline - no new tweets to show", Snackbar.LENGTH_LONG).show();
         }
     }
 

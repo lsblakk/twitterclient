@@ -96,7 +96,7 @@ public class Tweet extends BaseModel {
     public static ArrayList<Tweet> fetchDBTweets(){
         // Query all tweets in DB
         ArrayList tweets = (ArrayList) SQLite.select().
-                from(Tweet.class).orderBy(OrderBy.fromString("uid").descending()).queryList();
+                from(Tweet.class).orderBy(OrderBy.fromString("uid").ascending()).queryList();
         return tweets;
     }
 
