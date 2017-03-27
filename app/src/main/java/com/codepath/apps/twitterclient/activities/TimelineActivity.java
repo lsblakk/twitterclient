@@ -1,7 +1,11 @@
 package com.codepath.apps.twitterclient.activities;
 
+import android.content.Context;
 import android.content.SharedPreferences;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.preference.PreferenceManager;
+import android.support.design.widget.Snackbar;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AppCompatActivity;
@@ -13,6 +17,7 @@ import android.view.View;
 import android.support.design.widget.FloatingActionButton;
 import android.widget.Toast;
 
+import com.codepath.apps.twitterclient.MyDatabase;
 import com.codepath.apps.twitterclient.R;
 import com.codepath.apps.twitterclient.TwitterApplication;
 import com.codepath.apps.twitterclient.TwitterClient;
@@ -20,15 +25,21 @@ import com.codepath.apps.twitterclient.adapters.TweetsArrayAdapter;
 import com.codepath.apps.twitterclient.fragments.ComposeTweetFragment;
 import com.codepath.apps.twitterclient.fragments.TweetDetailFragment;
 import com.codepath.apps.twitterclient.models.Tweet;
+import com.codepath.apps.twitterclient.models.User;
 import com.codepath.apps.twitterclient.utils.DividerItemDecoration;
 import com.codepath.apps.twitterclient.utils.EndlessRecyclerViewScrollListener;
 import com.codepath.apps.twitterclient.utils.ItemClickSupport;
 import com.loopj.android.http.JsonHttpResponseHandler;
+import com.raizlabs.android.dbflow.config.FlowManager;
+import com.raizlabs.android.dbflow.sql.language.Delete;
+import com.raizlabs.android.dbflow.structure.database.transaction.ProcessModelTransaction;
+import com.raizlabs.android.dbflow.structure.database.transaction.Transaction;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
 import org.parceler.Parcels;
 
+import java.io.IOException;
 import java.util.ArrayList;
 
 import cz.msebera.android.httpclient.Header;
@@ -138,44 +149,56 @@ public class TimelineActivity extends AppCompatActivity implements ComposeTweetF
     // Fill the RecyclerView by creating the tweet objects
     private void populateTimeline(int page){
 
-        if (page == -1){
-            refresh = true;
-        } else {
-            refresh = false;
-        }
+        if (isNetworkAvailable() && isOnline()) {
 
-        client.getHomeTimeline(page, new JsonHttpResponseHandler() {
-            // SUCCESS
-            @Override
-            public void onSuccess(int statusCode, Header[] headers, JSONArray json) {
+            if (page == -1) {
+                refresh = true;
+            } else {
+                refresh = false;
+            }
 
-                int curSize = adapter.getItemCount();
+            client.getHomeTimeline(page, new JsonHttpResponseHandler() {
+                // SUCCESS
+                @Override
+                public void onSuccess(int statusCode, Header[] headers, JSONArray json) {
 
-                if (curSize == 0 || refresh){
-                    // 1. First, clear the array of data
-                    tweets.clear();
-                    // 2. Notify the adapter of the update
-                    adapter.notifyDataSetChanged(); // or notifyItemRangeRemoved
-                    // 3. Reset endless scroll listener when performing a new search
-                    scrollListener.resetState();
-                    // Get new tweets
-                    tweets.addAll(Tweet.fromJSONArray(json));
-                    adapter = new TweetsArrayAdapter(getApplicationContext(), tweets);
-                    rvTweets.setAdapter(adapter);
-                } else {
-                    tweets.addAll(Tweet.fromJSONArray(json));
-                    adapter.notifyItemRangeInserted(curSize, tweets.size());
+                    int curSize = adapter.getItemCount();
+
+                    if (curSize == 0 || refresh) {
+                        // 1. First, clear the array of data & clean out the DB
+                        tweets.clear();
+                        // Delete the tables
+                        Delete.tables(Tweet.class, User.class);
+                        // 2. Notify the adapter of the update
+                        adapter.notifyDataSetChanged(); // or notifyItemRangeRemoved
+                        // 3. Reset endless scroll listener when performing a new search
+                        scrollListener.resetState();
+                        // Get new tweets
+                        tweets.addAll(Tweet.fromJSONArray(json));
+                        adapter = new TweetsArrayAdapter(getApplicationContext(), tweets);
+                        rvTweets.setAdapter(adapter);
+                    } else {
+                        tweets.addAll(Tweet.fromJSONArray(json));
+                        adapter.notifyItemRangeInserted(curSize, tweets.size());
+                    }
+                    setPagination();
+                    swipeContainer.setRefreshing(false);
                 }
-                setPagination();
-                swipeContainer.setRefreshing(false);
-            }
 
-            // FAILURE
-            @Override
-            public void onFailure(int statusCode, Header[] headers, Throwable throwable, JSONObject errorResponse) {
-                Log.d("DEBUG", errorResponse.toString());
-            }
-        });
+                // FAILURE
+                @Override
+                public void onFailure(int statusCode, Header[] headers, Throwable throwable, JSONObject errorResponse) {
+                    Log.d("DEBUG", errorResponse.toString());
+                }
+            });
+        } else {
+            // get tweets from DB to populate the home screen
+            tweets = Tweet.fetchDBTweets();
+            adapter = new TweetsArrayAdapter(getApplicationContext(), tweets);
+            rvTweets.setAdapter(adapter);
+            // a visual for "offline" mode
+            Snackbar.make(findViewById(android.R.id.content), "Currently offline - no new tweets to show", Snackbar.LENGTH_INDEFINITE).show();
+        }
     }
 
     @Override
@@ -205,6 +228,24 @@ public class TimelineActivity extends AppCompatActivity implements ComposeTweetF
     @Override
     public void onCloseTweetDetail() {
         // nothing to do here right now
+    }
+
+    private Boolean isNetworkAvailable() {
+        ConnectivityManager connectivityManager
+                = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
+        NetworkInfo activeNetworkInfo = connectivityManager.getActiveNetworkInfo();
+        return activeNetworkInfo != null && activeNetworkInfo.isConnectedOrConnecting();
+    }
+
+    public boolean isOnline() {
+        Runtime runtime = Runtime.getRuntime();
+        try {
+            Process ipProcess = runtime.exec("/system/bin/ping -c 1 8.8.8.8");
+            int     exitValue = ipProcess.waitFor();
+            return (exitValue == 0);
+        } catch (IOException e)          { e.printStackTrace(); }
+        catch (InterruptedException e) { e.printStackTrace(); }
+        return false;
     }
 
 }

@@ -1,5 +1,11 @@
 package com.codepath.apps.twitterclient.models;
 
+import com.codepath.apps.twitterclient.MyDatabase;
+import com.raizlabs.android.dbflow.annotation.Column;
+import com.raizlabs.android.dbflow.annotation.PrimaryKey;
+import com.raizlabs.android.dbflow.annotation.Table;
+import com.raizlabs.android.dbflow.structure.BaseModel;
+
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.parceler.Parcel;
@@ -23,8 +29,9 @@ import org.parceler.Parcel;
     "profile_link_color": "FF3300",
 
  */
-@Parcel
-public class User {
+@Table(database = MyDatabase.class)
+@Parcel(analyze={User.class})
+public class User extends BaseModel {
     public String getName() {
         return name;
     }
@@ -60,9 +67,17 @@ public class User {
         this.profileImageUrl = profileImageUrl;
     }
 
+    @Column
     public String name;
+
+    @Column
+    @PrimaryKey
     public long uid;
+
+    @Column
     public String screenname;
+
+    @Column
     public String profileImageUrl;
 
 
@@ -73,10 +88,10 @@ public class User {
             u.uid = json.getLong("id");
             u.screenname = json.getString("screen_name");
             u.profileImageUrl = json.getString("profile_image_url_https");
+            u.save();
         } catch (JSONException e) {
             e.printStackTrace();
         }
-
         return u;
     }
 

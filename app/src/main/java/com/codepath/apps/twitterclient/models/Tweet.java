@@ -12,16 +12,36 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Locale;
 
+import com.codepath.apps.twitterclient.MyDatabase;
+import com.raizlabs.android.dbflow.annotation.Column;
+import com.raizlabs.android.dbflow.annotation.ForeignKey;
+import com.raizlabs.android.dbflow.annotation.PrimaryKey;
+import com.raizlabs.android.dbflow.annotation.Table;
+import com.raizlabs.android.dbflow.sql.language.OrderBy;
+import com.raizlabs.android.dbflow.sql.language.SQLite;
+import com.raizlabs.android.dbflow.structure.BaseModel;
+
 /**
  * Created by lukas on 3/21/17.
  */
 
 // Parse the JSON + Store the data, encapsulate logic or display logic for this data
-@Parcel
-public class Tweet {
+@Table(database = MyDatabase.class)
+@Parcel(analyze={Tweet.class})
+public class Tweet extends BaseModel {
+
+    @Column
     public String body;
+
+    @Column
+    @PrimaryKey
     public long uid; // unique id for the tweet
+
+    @Column
+    @ForeignKey(saveForeignKeyModel = false)
     public User user;
+
+    @Column
     public String createdAt;
 
     public String getBody() {
@@ -59,7 +79,7 @@ public class Tweet {
     // empty constructor needed by the Parceler library
     public Tweet() {}
 
-    // Deserialize the JSONOBject and build Tweet objects
+    // Deserialize the JSONObject and build Tweet objects
     public static Tweet fromJSON(JSONObject jsonobject) {
         Tweet tweet = new Tweet();
         try {
@@ -73,6 +93,13 @@ public class Tweet {
         return tweet;
     }
 
+    public static ArrayList<Tweet> fetchDBTweets(){
+        // Query all tweets in DB
+        ArrayList tweets = (ArrayList) SQLite.select().
+                from(Tweet.class).orderBy(OrderBy.fromString("uid").descending()).queryList();
+        return tweets;
+    }
+
     public static ArrayList<Tweet> fromJSONArray(JSONArray jsonArray) {
         ArrayList<Tweet> tweets = new ArrayList<>();
         for (int i = 0; i < jsonArray.length(); i++){
@@ -81,6 +108,7 @@ public class Tweet {
                 Tweet tweet = Tweet.fromJSON(tweetJson);
                 if (tweet != null){
                     tweets.add(tweet);
+                    tweet.save();
                 }
             } catch (JSONException e) {
                 e.printStackTrace();
