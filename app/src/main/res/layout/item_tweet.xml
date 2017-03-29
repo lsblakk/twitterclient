@@ -50,6 +50,7 @@
             android:layout_height="wrap_content"
             android:layout_toRightOf="@+id/ivProfileImage"
             android:layout_below="@id/tvTimestamp"
+            android:autoLink="all"
             android:padding="5dp"/>
 
     </RelativeLayout>
