@@ -1,31 +1,27 @@
 package com.codepath.apps.twitterclient.activities;
 
-import android.content.Context;
-import android.content.SharedPreferences;
-import android.net.ConnectivityManager;
-import android.net.NetworkInfo;
-import android.preference.PreferenceManager;
-import android.support.design.widget.Snackbar;
+import android.content.Intent;
+import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
-import android.support.v4.widget.SwipeRefreshLayout;
+import android.support.v4.app.FragmentPagerAdapter;
+import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
-import android.util.Log;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.support.design.widget.FloatingActionButton;
 import android.widget.Toast;
 
-import com.codepath.apps.twitterclient.MyDatabase;
+import com.astuetz.PagerSlidingTabStrip;
 import com.codepath.apps.twitterclient.R;
-import com.codepath.apps.twitterclient.TwitterApplication;
-import com.codepath.apps.twitterclient.TwitterClient;
-import com.codepath.apps.twitterclient.adapters.TweetsArrayAdapter;
 import com.codepath.apps.twitterclient.fragments.ComposeTweetFragment;
 import com.codepath.apps.twitterclient.fragments.HomeTimelineFragment;
+import com.codepath.apps.twitterclient.fragments.MentionsTimelineFragment;
 import com.codepath.apps.twitterclient.fragments.TweetDetailFragment;
+
+import static com.codepath.apps.twitterclient.R.id.fab;
 
 public class TimelineActivity extends AppCompatActivity implements ComposeTweetFragment.ComposeDialogListener, TweetDetailFragment.TweetDetailsListener {
 
@@ -34,6 +30,11 @@ public class TimelineActivity extends AppCompatActivity implements ComposeTweetF
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_timeline);
+        // get the view pager & tablayout
+        ViewPager viewPager = (ViewPager) findViewById(R.id.viewpager);
+        viewPager.setAdapter(new TweetsPagerAdapter(getSupportFragmentManager()));
+        PagerSlidingTabStrip tabStrip = (PagerSlidingTabStrip) findViewById(R.id.tabs);
+        tabStrip.setViewPager(viewPager);
 
         // Compose button
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
@@ -46,6 +47,13 @@ public class TimelineActivity extends AppCompatActivity implements ComposeTweetF
             }
         });
 
+    }
+
+    // Inflate the menu; this adds items to the action bar if it is present.
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.menu_timeline, menu);
+        return true;
     }
 
 
@@ -72,6 +80,50 @@ public class TimelineActivity extends AppCompatActivity implements ComposeTweetF
     @Override
     public void onCloseTweetDetail() {
         // nothing to do here right now
+    }
+
+    public void onProfileView(MenuItem mi){
+        Intent i = new Intent(this, ProfileActivity.class);
+        startActivity(i);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        int id = item.getItemId();
+        return super.onOptionsItemSelected(item);
+    }
+
+    // return the order of the fragments in the view pager
+    public class TweetsPagerAdapter extends FragmentPagerAdapter {
+        final int PAGE_COUNT = 2;
+        private String tabTitles[] = { "Home", "Mentions" };
+
+        public TweetsPagerAdapter(FragmentManager fm){
+            super(fm);
+        }
+
+        @Override
+        public Fragment getItem(int position) {
+            if (position == 0){
+                return new HomeTimelineFragment();
+            } else if (position == 1) {
+                return new MentionsTimelineFragment();
+            } else {
+                return null;
+            }
+        }
+
+        // returns tab title
+        @Override
+        public CharSequence getPageTitle(int position) {
+            return tabTitles[position];
+        }
+
+        // how many fragments there are to swipe between
+        @Override
+        public int getCount() {
+            return PAGE_COUNT;
+        }
     }
 
 }

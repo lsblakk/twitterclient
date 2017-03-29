@@ -9,5 +9,6 @@
     <string name="compose">Compose your tweet here...</string>
     <string name="chars_remain">(140) characters remaining</string>
     <string name="tweet_success">Tweet posted successfully!</string>
+    <string name="screen_name">Screen Name</string>
 
 </resources>

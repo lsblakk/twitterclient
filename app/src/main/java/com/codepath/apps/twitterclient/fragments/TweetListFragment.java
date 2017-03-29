@@ -16,7 +16,6 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.codepath.apps.twitterclient.R;
-import com.codepath.apps.twitterclient.activities.TimelineActivity;
 import com.codepath.apps.twitterclient.adapters.TweetsArrayAdapter;
 import com.codepath.apps.twitterclient.models.Tweet;
 import com.codepath.apps.twitterclient.utils.DividerItemDecoration;
@@ -29,7 +28,6 @@ import org.parceler.Parcels;
 
 import java.util.ArrayList;
 
-import static com.codepath.apps.twitterclient.R.id.swipeContainer;
 
 /**
  * Created by lukas on 3/28/17.
