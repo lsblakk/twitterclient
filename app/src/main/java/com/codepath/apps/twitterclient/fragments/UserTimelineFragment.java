@@ -54,8 +54,6 @@ public class UserTimelineFragment extends TweetListFragment {
     public void populateTimeline(int page){
         String screenName = getArguments().getString(String.valueOf(R.string.screen_name));
 
-        if (isNetworkAvailable() && isOnline()) {
-
             if (page == -1) {
                 refresh = true;
             } else {
@@ -70,10 +68,8 @@ public class UserTimelineFragment extends TweetListFragment {
                     int curSize = getItemCount();
 
                     if (curSize == 0 || refresh) {
-                        // 1. First, clear the array of data & clean out the DB
+                        // 1. First, clear the array of data
                         clear();
-                        // Delete the tables
-                        Delete.tables(Tweet.class, User.class);
                         // 2. Notify the adapter of the update
                         notifyDataSetChanged(); // or notifyItemRangeRemoved
                         // 3. Reset endless scroll listener when performing a new search
@@ -93,27 +89,7 @@ public class UserTimelineFragment extends TweetListFragment {
                     Log.d("DEBUG", errorResponse.toString());
                 }
             });
-        } else {
-            getOfflineTweets();
-        }
+
     }
 
-
-    private Boolean isNetworkAvailable() {
-        ConnectivityManager connectivityManager
-                = (ConnectivityManager) getActivity().getSystemService(Context.CONNECTIVITY_SERVICE);
-        NetworkInfo activeNetworkInfo = connectivityManager.getActiveNetworkInfo();
-        return activeNetworkInfo != null && activeNetworkInfo.isConnectedOrConnecting();
-    }
-
-    public boolean isOnline() {
-        Runtime runtime = Runtime.getRuntime();
-        try {
-            Process ipProcess = runtime.exec("/system/bin/ping -c 1 8.8.8.8");
-            int     exitValue = ipProcess.waitFor();
-            return (exitValue == 0);
-        } catch (IOException e)          { e.printStackTrace(); }
-        catch (InterruptedException e) { e.printStackTrace(); }
-        return false;
-    }
 }

@@ -54,67 +54,45 @@ public class HomeTimelineFragment extends TweetListFragment {
     // Fill the RecyclerView by creating the tweet objects
     public void populateTimeline(int page){
 
-        if (isNetworkAvailable() && isOnline()) {
+        if (page == -1) {
+            refresh = true;
+        } else {
+            refresh = false;
+        }
 
-            if (page == -1) {
-                refresh = true;
-            } else {
-                refresh = false;
+        client.getHomeTimeline(page, new JsonHttpResponseHandler() {
+            // SUCCESS
+            @Override
+            public void onSuccess(int statusCode, Header[] headers, JSONArray json) {
+
+                int curSize = getItemCount();
+
+                if (curSize == 0 || refresh) {
+                    // 1. First, clear the array of data & clean out the DB
+                    clear();
+                    // Delete the tables
+                    Delete.tables(Tweet.class, User.class);
+                    // 2. Notify the adapter of the update
+                    notifyDataSetChanged(); // or notifyItemRangeRemoved
+                    // 3. Reset endless scroll listener when performing a new search
+                    resetState();
+                    // Get new tweets
+                    addAllNew(json);
+                } else {
+                    updateTweetList(json);
+                }
+                setPagination();
+                setRefreshing(false);
             }
 
-            client.getHomeTimeline(page, new JsonHttpResponseHandler() {
-                // SUCCESS
-                @Override
-                public void onSuccess(int statusCode, Header[] headers, JSONArray json) {
+            // FAILURE
+            @Override
+            public void onFailure(int statusCode, Header[] headers, Throwable throwable, JSONObject errorResponse) {
+                Log.d("DEBUG", errorResponse.toString());
+            }
+        });
 
-                    int curSize = getItemCount();
-
-                    if (curSize == 0 || refresh) {
-                        // 1. First, clear the array of data & clean out the DB
-                        clear();
-                        // Delete the tables
-                        Delete.tables(Tweet.class, User.class);
-                        // 2. Notify the adapter of the update
-                        notifyDataSetChanged(); // or notifyItemRangeRemoved
-                        // 3. Reset endless scroll listener when performing a new search
-                        resetState();
-                        // Get new tweets
-                        addAllNew(json);
-                    } else {
-                        updateTweetList(json);
-                    }
-                    setPagination();
-                    setRefreshing(false);
-                }
-
-                // FAILURE
-                @Override
-                public void onFailure(int statusCode, Header[] headers, Throwable throwable, JSONObject errorResponse) {
-                    Log.d("DEBUG", errorResponse.toString());
-                }
-            });
-        } else {
-            getOfflineTweets();
-        }
     }
 
-
-    private Boolean isNetworkAvailable() {
-        ConnectivityManager connectivityManager
-                = (ConnectivityManager) getActivity().getSystemService(Context.CONNECTIVITY_SERVICE);
-        NetworkInfo activeNetworkInfo = connectivityManager.getActiveNetworkInfo();
-        return activeNetworkInfo != null && activeNetworkInfo.isConnectedOrConnecting();
-    }
-
-    public boolean isOnline() {
-        Runtime runtime = Runtime.getRuntime();
-        try {
-            Process ipProcess = runtime.exec("/system/bin/ping -c 1 8.8.8.8");
-            int     exitValue = ipProcess.waitFor();
-            return (exitValue == 0);
-        } catch (IOException e)          { e.printStackTrace(); }
-        catch (InterruptedException e) { e.printStackTrace(); }
-        return false;
-    }
 
 }

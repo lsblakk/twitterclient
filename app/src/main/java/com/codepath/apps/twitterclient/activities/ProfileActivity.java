@@ -12,6 +12,7 @@ import android.widget.TextView;
 import com.codepath.apps.twitterclient.R;
 import com.codepath.apps.twitterclient.TwitterApplication;
 import com.codepath.apps.twitterclient.TwitterClient;
+import com.codepath.apps.twitterclient.fragments.TweetDetailFragment;
 import com.codepath.apps.twitterclient.fragments.UserTimelineFragment;
 import com.codepath.apps.twitterclient.models.User;
 import com.loopj.android.http.JsonHttpResponseHandler;
@@ -24,7 +25,7 @@ import cz.msebera.android.httpclient.Header;
 import static com.codepath.apps.twitterclient.R.string.tweet;
 import static com.raizlabs.android.dbflow.config.FlowManager.getContext;
 
-public class ProfileActivity extends AppCompatActivity {
+public class ProfileActivity extends AppCompatActivity implements TweetDetailFragment.TweetDetailsListener {
 
     TwitterClient client;
     User user;
@@ -89,5 +90,10 @@ public class ProfileActivity extends AppCompatActivity {
     public boolean onCreateOptionsMenu(Menu menu) {
         //getMenuInflater().inflate(R.menu.menu_timeline, menu);
         return true;
+    }
+
+    @Override
+    public void onCloseTweetDetail() {
+        // nothing to do here right now
     }
 }

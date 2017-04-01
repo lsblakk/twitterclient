@@ -4,14 +4,17 @@ import android.support.v4.app.DialogFragment;
 import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.codepath.apps.twitterclient.R;
+import com.codepath.apps.twitterclient.TwitterClient;
 
 import java.util.ArrayList;
 
@@ -19,7 +22,7 @@ import java.util.ArrayList;
  * Created by lukas on 3/22/17.
  */
 
-public class ComposeTweetFragment extends DialogFragment{
+public class ComposeTweetFragment extends DialogFragment {
 
     private TextView mComposeBody;
     private Button mTweetButton;

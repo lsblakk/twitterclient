@@ -33,7 +33,7 @@ import java.util.ArrayList;
  * Created by lukas on 3/28/17.
  */
 
-public class TweetListFragment extends Fragment {
+public abstract class TweetListFragment extends Fragment {
 
     private TweetsArrayAdapter adapter;
     private ArrayList<Tweet> tweets;
@@ -90,7 +90,7 @@ public class TweetListFragment extends Fragment {
             public void onLoadMore(int page, int totalItemsCount, RecyclerView view) {
                 // Triggered only when new data needs to be appended to the list
                 // Add whatever code is needed to append new items to the bottom of the list
-                //populateTimeline(page);
+                populateTimeline(page);
             }
         };
 
@@ -114,6 +114,9 @@ public class TweetListFragment extends Fragment {
 
         return v;
     }
+
+    // Abstract method to be overridden
+    protected abstract void populateTimeline(int page);
 
     public void setPagination() {
         edit.putLong("max_id", tweets.get(tweets.size()-1).getUid());
@@ -166,6 +169,7 @@ public class TweetListFragment extends Fragment {
     public void setRefreshing(Boolean refreshing){
         swipeContainer.setRefreshing(refreshing);
     }
+
 
 
 }
