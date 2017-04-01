@@ -55,15 +55,15 @@ public class TweetsArrayAdapter extends RecyclerView.Adapter<TweetsArrayAdapter.
         @Override
         public void onClick(View v) {
             if (v instanceof ImageView){
-                mListener.onTomato((ImageView)v);
+                mListener.loadProfileView((ImageView)v);
             } else {
-                mListener.onPotato(v);
+                mListener.loadTweetDetail(v);
             }
         }
 
         public interface IMyViewHolderClicks {
-             void onPotato(View caller);
-             void onTomato(ImageView callerImage);
+             void loadTweetDetail(View caller);
+             void loadProfileView(ImageView callerImage);
         }
     }
 
@@ -83,13 +83,12 @@ public class TweetsArrayAdapter extends RecyclerView.Adapter<TweetsArrayAdapter.
     public TweetsArrayAdapter.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View tweetView = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_tweet, parent, false);
         ViewHolder viewHolder = new ViewHolder(tweetView, new TweetsArrayAdapter.ViewHolder.IMyViewHolderClicks() {
-            public void onPotato(View caller) {
-                // call the profile activity with a screen name?
-                Log.d("VEGETABLES", "Poh-tah-tos");
+            public void loadTweetDetail(View caller) {
+                Log.d("DEBUG", "This will open the tweet detail Fragment");
             }
-            public void onTomato(ImageView callerImage) {
-                // open tweet detail view
-                Log.d("VEGETABLES", "To-m8-tohs");
+            public void loadProfileView(ImageView callerImage) {
+                // open profile view
+                Log.d("DEBUG", "This will open the profile view");
             }
         });
         return viewHolder;
