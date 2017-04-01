@@ -100,12 +100,23 @@ public class TwitterClient extends OAuthBaseClient {
         }
     }
 
-    public void getUserTimeline(String screenName, AsyncHttpResponseHandler handler){
+    public void getUserTimeline(int page, String screenName, AsyncHttpResponseHandler handler){
         if (isNetworkAvailable() && isOnline()) {
             String apiUrl = getApiUrl("statuses/user_timeline.json");
             RequestParams params = new RequestParams();
             params.put("count", 25);
             params.put(String.valueOf(R.string.screen_name), screenName);
+
+            // Use since_id to hold the processed tweets and max_id to hold the
+            long maxId = pref.getLong("max_id", 1);
+            if (page == -1) {
+                // Refresh want the newest tweets
+                params.put("since_id", 1);
+            }
+            if (page > 0) {
+                params.put("max_id", maxId);
+            }
+
             client.get(apiUrl, params, handler);
         } else {
             Log.d("DEBUG", getClass().getName().toString() + " : either no network or offline");

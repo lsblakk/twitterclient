@@ -60,7 +60,7 @@ public class UserTimelineFragment extends TweetListFragment {
                 refresh = false;
             }
 
-            client.getUserTimeline(screenName, new JsonHttpResponseHandler() {
+            client.getUserTimeline(page, screenName, new JsonHttpResponseHandler() {
                 // SUCCESS
                 @Override
                 public void onSuccess(int statusCode, Header[] headers, JSONArray json) {

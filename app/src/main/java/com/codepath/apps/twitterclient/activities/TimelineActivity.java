@@ -67,18 +67,18 @@ public class TimelineActivity extends AppCompatActivity implements ComposeTweetF
         if (message.isEmpty()){
             Toast.makeText(this, "Can't tweet nothing!", Toast.LENGTH_LONG).show();
         } else {
-            client.composeTweet(message, new JsonHttpResponseHandler() {
-                @Override
-                public void onSuccess(int statusCode, JSONObject json) {
-                    Toast.makeText(getApplicationContext(), getString(R.string.tweet_success), Toast.LENGTH_LONG).show();
-                    finishCompose(json);
-                }
-
-                @Override
-                public void onFailure(int statusCode, Throwable throwable, JSONObject errorResponse) {
-                    Log.d("DEBUG", errorResponse.toString());
-                }
-            });
+//            client.composeTweet(message, new JsonHttpResponseHandler() {
+//                @Override
+//                public void onSuccess(int statusCode, JSONObject json) {
+//                    Toast.makeText(getApplicationContext(), getString(R.string.tweet_success), Toast.LENGTH_LONG).show();
+//                    finishCompose(json);
+//                }
+//
+//                @Override
+//                public void onFailure(int statusCode, Throwable throwable, JSONObject errorResponse) {
+//                    Log.d("DEBUG", errorResponse.toString());
+//                }
+//            });
         }
     }
     @Override
