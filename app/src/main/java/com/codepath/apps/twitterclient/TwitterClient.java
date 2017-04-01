@@ -132,6 +132,19 @@ public class TwitterClient extends OAuthBaseClient {
         }
     }
 
+    public void getUserBanner(String screenName, AsyncHttpResponseHandler handler){
+        if (isNetworkAvailable() && isOnline()) {
+           // GET https://api.twitter.com/1.1/users/profile_banner.json?screen_name=twitterapi
+            String apiUrl = getApiUrl("users/profile_banner.json");
+            RequestParams  params = new RequestParams();
+            params.put("screen_name", screenName);
+            client.get(apiUrl, null, handler);
+        } else {
+            Log.d("DEBUG", getClass().getName().toString() + " : either no network or offline");
+        }
+    }
+
+
     public void composeTweet(String message, AsyncHttpResponseHandler handler) {
         if (isNetworkAvailable() && isOnline()) {
             String apiURL = getApiUrl("statuses/update.json");

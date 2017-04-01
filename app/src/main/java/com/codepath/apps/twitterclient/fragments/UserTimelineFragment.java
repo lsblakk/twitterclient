@@ -51,6 +51,7 @@ public class UserTimelineFragment extends TweetListFragment {
 
     // Send an API request to get timeline jason
     // Fill the RecyclerView by creating the tweet objects
+    @Override
     public void populateTimeline(int page){
         String screenName = getArguments().getString(String.valueOf(R.string.screen_name));
 

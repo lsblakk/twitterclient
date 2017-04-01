@@ -13,6 +13,10 @@
         tools:layout_editor_absoluteY="0dp"
         tools:layout_editor_absoluteX="0dp">
 
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/ivHeader"/>
 
         <ImageView
             android:id="@+id/ivProfileImage"
@@ -69,7 +73,7 @@
         android:layout_height="fill_parent"
         android:id="@+id/flContainer"
         android:layout_alignParentLeft="true"
-        android:layout_below="@+id/rlUserHeader"
+        android:layout_below="@+id/llCounts"
         >
 
     </FrameLayout>

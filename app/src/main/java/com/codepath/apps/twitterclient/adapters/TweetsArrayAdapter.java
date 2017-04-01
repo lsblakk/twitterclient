@@ -2,6 +2,7 @@ package com.codepath.apps.twitterclient.adapters;
 
 import android.content.Context;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -13,11 +14,12 @@ import com.codepath.apps.twitterclient.models.Tweet;
 import com.squareup.picasso.Picasso;
 
 
+import org.w3c.dom.Text;
+
 import java.util.List;
 
 import jp.wasabeef.picasso.transformations.RoundedCornersTransformation;
 
-import static com.codepath.apps.twitterclient.R.id.tvBody;
 
 /**
  * Created by lukas on 3/21/17.
@@ -26,23 +28,42 @@ import static com.codepath.apps.twitterclient.R.id.tvBody;
 // Taking the Tweet objects and turning them into views
 public class TweetsArrayAdapter extends RecyclerView.Adapter<TweetsArrayAdapter.ViewHolder> {
 
-    public static class ViewHolder extends RecyclerView.ViewHolder {
+    public static class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener{
 
         public TextView tvBody;
         public TextView tvUsername;
         public TextView tvName;
         public TextView tvTimestamp;
         public ImageView ivProfileImage;
+        public IMyViewHolderClicks mListener;
 
-        public ViewHolder(View itemView) {
+        public ViewHolder(View itemView, IMyViewHolderClicks listener) {
 
             super(itemView);
-
+            mListener = listener;
             tvBody = (TextView) itemView.findViewById(R.id.tvBody);
+            tvBody.setOnClickListener(this);
             tvUsername = (TextView) itemView.findViewById(R.id.tvUsername);
+            tvUsername.setOnClickListener(this);
             tvName = (TextView) itemView.findViewById(R.id.tvName);
+            tvName.setOnClickListener(this);
             tvTimestamp = (TextView) itemView.findViewById(R.id.tvTimestamp);
             ivProfileImage = (ImageView) itemView.findViewById(R.id.ivProfileImage);
+            ivProfileImage.setOnClickListener(this);
+        }
+
+        @Override
+        public void onClick(View v) {
+            if (v instanceof ImageView){
+                mListener.onTomato((ImageView)v);
+            } else {
+                mListener.onPotato(v);
+            }
+        }
+
+        public interface IMyViewHolderClicks {
+             void onPotato(View caller);
+             void onTomato(ImageView callerImage);
         }
     }
 
@@ -60,11 +81,17 @@ public class TweetsArrayAdapter extends RecyclerView.Adapter<TweetsArrayAdapter.
 
     @Override
     public TweetsArrayAdapter.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        Context context = parent.getContext();
-        LayoutInflater inflater = LayoutInflater.from(context);
-
-        View tweetView = inflater.inflate(R.layout.item_tweet, parent, false);
-        ViewHolder viewHolder = new ViewHolder(tweetView);
+        View tweetView = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_tweet, parent, false);
+        ViewHolder viewHolder = new ViewHolder(tweetView, new TweetsArrayAdapter.ViewHolder.IMyViewHolderClicks() {
+            public void onPotato(View caller) {
+                // call the profile activity with a screen name?
+                Log.d("VEGETABLES", "Poh-tah-tos");
+            }
+            public void onTomato(ImageView callerImage) {
+                // open tweet detail view
+                Log.d("VEGETABLES", "To-m8-tohs");
+            }
+        });
         return viewHolder;
     }
 

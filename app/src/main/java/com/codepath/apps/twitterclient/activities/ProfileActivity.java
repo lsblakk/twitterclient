@@ -52,6 +52,21 @@ public class ProfileActivity extends AppCompatActivity implements TweetDetailFra
 
         // Get the screen name
         String screenName = getIntent().getStringExtra(String.valueOf(R.string.screen_name));
+
+        // Getting user banner
+        client.getUserBanner(screenName, new JsonHttpResponseHandler(){
+            @Override
+            public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
+                // grab the banner url here and put it into the imageView
+            }
+
+            @Override
+            public void onFailure(int statusCode, Header[] headers, String responseString, Throwable throwable) {
+                super.onFailure(statusCode, headers, responseString, throwable);
+            }
+        });
+
+
         if (savedInstanceState == null) {
             // Create the UserTimelineFragment
             UserTimelineFragment fragmentUserTimeline = UserTimelineFragment.newInstance(screenName);
@@ -71,8 +86,8 @@ public class ProfileActivity extends AppCompatActivity implements TweetDetailFra
 
         tvName.setText(user.getName());
         tvTagline.setText(user.getTagline());
-        tvFollowers.setText(String.valueOf(user.getFollowers()));
-        tvFollowing.setText(String.valueOf(user.getFollowing()));
+        tvFollowers.setText(String.valueOf(user.getFollowers()) + " " +  getString(R.string.followers));
+        tvFollowing.setText(String.valueOf(user.getFollowing()) + " " + getString(R.string.following));
 
         ivProfileImage.setImageResource(android.R.color.transparent);
         Picasso.with(getContext()).load(user.getProfileImageUrl()).into(ivProfileImage);

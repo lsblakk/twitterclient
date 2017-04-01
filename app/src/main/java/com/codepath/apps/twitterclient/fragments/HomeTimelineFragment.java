@@ -52,6 +52,7 @@ public class HomeTimelineFragment extends TweetListFragment {
 
     // Send an API request to get timeline jason
     // Fill the RecyclerView by creating the tweet objects
+    @Override
     public void populateTimeline(int page){
 
         if (page == -1) {

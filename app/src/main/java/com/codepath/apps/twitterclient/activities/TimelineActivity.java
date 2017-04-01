@@ -7,7 +7,6 @@ import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -16,25 +15,19 @@ import android.widget.Toast;
 
 import com.astuetz.PagerSlidingTabStrip;
 import com.codepath.apps.twitterclient.R;
-import com.codepath.apps.twitterclient.TwitterClient;
 import com.codepath.apps.twitterclient.fragments.ComposeTweetFragment;
 import com.codepath.apps.twitterclient.fragments.HomeTimelineFragment;
 import com.codepath.apps.twitterclient.fragments.MentionsTimelineFragment;
 import com.codepath.apps.twitterclient.fragments.TweetDetailFragment;
-import com.codepath.apps.twitterclient.fragments.TweetListFragment;
-import com.loopj.android.http.JsonHttpResponseHandler;
-
-import org.json.JSONObject;
 
 public class TimelineActivity extends AppCompatActivity implements ComposeTweetFragment.ComposeDialogListener, TweetDetailFragment.TweetDetailsListener {
 
-    TwitterClient client;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_timeline);
-        // get the view pager & tablayout
+        // get the view pager & tab layout
         ViewPager viewPager = (ViewPager) findViewById(R.id.viewpager);
         viewPager.setAdapter(new TweetsPagerAdapter(getSupportFragmentManager()));
         PagerSlidingTabStrip tabStrip = (PagerSlidingTabStrip) findViewById(R.id.tabs);
@@ -67,15 +60,15 @@ public class TimelineActivity extends AppCompatActivity implements ComposeTweetF
         if (message.isEmpty()){
             Toast.makeText(this, "Can't tweet nothing!", Toast.LENGTH_LONG).show();
         } else {
-//            client.composeTweet(message, new JsonHttpResponseHandler() {
+//            client.composeTweet(message, new JsonHttpResponseHandler () {
 //                @Override
-//                public void onSuccess(int statusCode, JSONObject json) {
+//                public void onSuccess(int statusCode, Header[] headers, JSONObject json) {
 //                    Toast.makeText(getApplicationContext(), getString(R.string.tweet_success), Toast.LENGTH_LONG).show();
-//                    finishCompose(json);
+//                    fragmentTweetsList.finishCompose(json);
 //                }
 //
 //                @Override
-//                public void onFailure(int statusCode, Throwable throwable, JSONObject errorResponse) {
+//                public void onFailure(int statusCode, Header[] headers, Throwable throwable, JSONObject errorResponse) {
 //                    Log.d("DEBUG", errorResponse.toString());
 //                }
 //            });

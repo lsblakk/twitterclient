@@ -14,6 +14,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 
 import com.codepath.apps.twitterclient.R;
 import com.codepath.apps.twitterclient.adapters.TweetsArrayAdapter;
@@ -97,20 +98,20 @@ public abstract class TweetListFragment extends Fragment {
         rvTweets.addOnScrollListener(scrollListener);
 
 
-        // hook up item click for RecyclerView
-        ItemClickSupport.addTo(rvTweets).setOnItemClickListener(
-                new ItemClickSupport.OnItemClickListener() {
-                    @Override
-                    public void onItemClicked(RecyclerView recyclerView, int position, View v) {
-                        FragmentManager fm = getActivity().getSupportFragmentManager();
-                        TweetDetailFragment tweetDetailFragment = TweetDetailFragment.newInstance();
-                        Bundle args = new Bundle();
-                        args.putParcelable("tweet", Parcels.wrap(tweets.get(position)));
-                        tweetDetailFragment.setArguments(args);
-                        tweetDetailFragment.show(fm, "fragment_tweet_detail");
-                    }
-                }
-        );
+//        // hook up item click for RecyclerView
+//        ItemClickSupport.addTo(rvTweets).setOnItemClickListener(
+//                new ItemClickSupport.OnItemClickListener() {
+//                    @Override
+//                    public void onItemClicked(RecyclerView recyclerView, int position, View v) {
+//                            FragmentManager fm = getActivity().getSupportFragmentManager();
+//                            TweetDetailFragment tweetDetailFragment = TweetDetailFragment.newInstance();
+//                            Bundle args = new Bundle();
+//                            args.putParcelable("tweet", Parcels.wrap(tweets.get(position)));
+//                            tweetDetailFragment.setArguments(args);
+//                            tweetDetailFragment.show(fm, "fragment_tweet_detail");
+//                        }
+//                }
+//        );
 
         return v;
     }
@@ -170,6 +171,8 @@ public abstract class TweetListFragment extends Fragment {
         swipeContainer.setRefreshing(refreshing);
     }
 
+    public void tweetDetail() {
+    }
 
 
 }

@@ -13,7 +13,7 @@ The following **required** functionality is completed:
   * [x] User can view their home timeline tweets.
   * [x] User can view the recent mentions of their username.
 * [x] User can navigate to **view their own profile**
-  * [ ] User can see picture, tagline, # of followers, # of following, and tweets on their profile.
+  * [x] User can see picture, tagline, # of followers, # of following, and tweets on their profile.
 * [ ] User can **click on the profile image** in any tweet to see **another user's** profile.
  * [ ] User can see picture, tagline, # of followers, # of following, and tweets of clicked user.
  * [ ] Profile view includes that user's timeline
@@ -52,7 +52,7 @@ GIF created with [LiceCap](http://www.cockos.com/licecap/).
 
 ## Notes
 
-Describe any challenges encountered while building the app.
+* I was frustrated with the blank space at the top of my dialog fragments (for compose tweet and for tweet detail) - thanks to [Stack Overflow](http://stackoverflow.com/questions/18465002/layout-margin-padding-at-the-top-of-dialog-fragment) I fixed this.
 
 ## Open-source libraries used
 
