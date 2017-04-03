@@ -6,15 +6,14 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.codepath.apps.twitterclient.R;
 import com.codepath.apps.twitterclient.models.Tweet;
+import com.codepath.apps.twitterclient.utils.ItemClickSupport;
 import com.squareup.picasso.Picasso;
-
-
-import org.w3c.dom.Text;
 
 import java.util.List;
 
@@ -28,51 +27,58 @@ import jp.wasabeef.picasso.transformations.RoundedCornersTransformation;
 // Taking the Tweet objects and turning them into views
 public class TweetsArrayAdapter extends RecyclerView.Adapter<TweetsArrayAdapter.ViewHolder> {
 
-    public static class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener{
+    private OnItemClickListener mListener;
+
+    public interface OnItemClickListener {
+        void loadProfileView(String username);
+        void onItemClick(View itemView, int position);
+    }
+
+    public void setOnItemClickListener(OnItemClickListener listener){
+        this.mListener = listener;
+    }
+
+    public class ViewHolder extends RecyclerView.ViewHolder {
 
         public TextView tvBody;
         public TextView tvUsername;
         public TextView tvName;
         public TextView tvTimestamp;
         public ImageView ivProfileImage;
-        public IMyViewHolderClicks mListener;
 
-        public ViewHolder(View itemView, IMyViewHolderClicks listener) {
+        public ViewHolder(final View itemView) {
 
             super(itemView);
-            mListener = listener;
             tvBody = (TextView) itemView.findViewById(R.id.tvBody);
-            tvBody.setOnClickListener(this);
             tvUsername = (TextView) itemView.findViewById(R.id.tvUsername);
-            tvUsername.setOnClickListener(this);
             tvName = (TextView) itemView.findViewById(R.id.tvName);
-            tvName.setOnClickListener(this);
             tvTimestamp = (TextView) itemView.findViewById(R.id.tvTimestamp);
             ivProfileImage = (ImageView) itemView.findViewById(R.id.ivProfileImage);
-            ivProfileImage.setOnClickListener(this);
-        }
 
-        @Override
-        public void onClick(View v) {
-            if (v instanceof ImageView){
-                mListener.loadProfileView((ImageView)v);
-            } else {
-                mListener.loadTweetDetail(v);
-            }
-        }
-
-        public interface IMyViewHolderClicks {
-             void loadTweetDetail(View caller);
-             void loadProfileView(ImageView callerImage);
+            // Setup the click listener
+            itemView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    // Triggers click upwards to the adapter on click
+                    if (mListener != null) {
+                        int position = getAdapterPosition();
+                        if (position != RecyclerView.NO_POSITION) {
+                            mListener.onItemClick(itemView, position);
+                        }
+                    }
+                }
+            });
         }
     }
 
     private List<Tweet> mTweets;
     private Context mContext;
 
+
     public TweetsArrayAdapter(Context context, List<Tweet> tweets) {
         mTweets = tweets;
         mContext = context;
+        mListener = null;
     }
 
     private Context getContext() {
@@ -82,15 +88,7 @@ public class TweetsArrayAdapter extends RecyclerView.Adapter<TweetsArrayAdapter.
     @Override
     public TweetsArrayAdapter.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View tweetView = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_tweet, parent, false);
-        ViewHolder viewHolder = new ViewHolder(tweetView, new TweetsArrayAdapter.ViewHolder.IMyViewHolderClicks() {
-            public void loadTweetDetail(View caller) {
-                Log.d("DEBUG", "This will open the tweet detail Fragment");
-            }
-            public void loadProfileView(ImageView callerImage) {
-                // open profile view
-                Log.d("DEBUG", "This will open the profile view");
-            }
-        });
+        ViewHolder viewHolder = new ViewHolder(tweetView);
         return viewHolder;
     }
 

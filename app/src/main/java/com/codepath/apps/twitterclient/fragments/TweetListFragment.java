@@ -15,8 +15,11 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.TextView;
+import android.widget.Toast;
 
 import com.codepath.apps.twitterclient.R;
+import com.codepath.apps.twitterclient.activities.TimelineActivity;
 import com.codepath.apps.twitterclient.adapters.TweetsArrayAdapter;
 import com.codepath.apps.twitterclient.models.Tweet;
 import com.codepath.apps.twitterclient.utils.DividerItemDecoration;
@@ -28,6 +31,9 @@ import org.json.JSONObject;
 import org.parceler.Parcels;
 
 import java.util.ArrayList;
+
+import static android.media.CamcorderProfile.get;
+import static com.codepath.apps.twitterclient.models.User_Table.name;
 
 
 /**
@@ -58,6 +64,31 @@ public abstract class TweetListFragment extends Fragment {
 
         tweets = new ArrayList<>();
         adapter = new TweetsArrayAdapter(getActivity(), tweets);
+        adapter.setOnItemClickListener(new TweetsArrayAdapter.OnItemClickListener() {
+            @Override
+            public void loadProfileView(String name) {
+                Toast.makeText(getContext(), name + " was clicked", Toast.LENGTH_SHORT).show();
+            }
+            @Override
+            public void onItemClick(View view, int position) {
+                if (view instanceof ImageView) {
+                    TextView tvUsername = (TextView) view.findViewById(R.id.tvUsername);
+                    String name = tvUsername.getText().toString();
+                    Toast.makeText(getContext(), name + " was clicked", Toast.LENGTH_SHORT).show();
+                    loadProfileView(name);
+                } else {
+                    int itemViewType = adapter.getItemViewType(position);
+                    Log.d("Debug", String.valueOf(itemViewType));
+                    FragmentManager fm = getActivity().getSupportFragmentManager();
+                    TweetDetailFragment tweetDetailFragment = TweetDetailFragment.newInstance();
+                    Bundle args = new Bundle();
+                    args.putParcelable("tweet", Parcels.wrap(tweets.get(position)));
+                    tweetDetailFragment.setArguments(args);
+                    tweetDetailFragment.show(fm, "fragment_tweet_detail");
+                }
+
+            }
+        });
 
     }
 
@@ -96,22 +127,6 @@ public abstract class TweetListFragment extends Fragment {
         };
 
         rvTweets.addOnScrollListener(scrollListener);
-
-
-//        // hook up item click for RecyclerView
-//        ItemClickSupport.addTo(rvTweets).setOnItemClickListener(
-//                new ItemClickSupport.OnItemClickListener() {
-//                    @Override
-//                    public void onItemClicked(RecyclerView recyclerView, int position, View v) {
-//                            FragmentManager fm = getActivity().getSupportFragmentManager();
-//                            TweetDetailFragment tweetDetailFragment = TweetDetailFragment.newInstance();
-//                            Bundle args = new Bundle();
-//                            args.putParcelable("tweet", Parcels.wrap(tweets.get(position)));
-//                            tweetDetailFragment.setArguments(args);
-//                            tweetDetailFragment.show(fm, "fragment_tweet_detail");
-//                        }
-//                }
-//        );
 
         return v;
     }
@@ -170,9 +185,5 @@ public abstract class TweetListFragment extends Fragment {
     public void setRefreshing(Boolean refreshing){
         swipeContainer.setRefreshing(refreshing);
     }
-
-    public void tweetDetail() {
-    }
-
 
 }
