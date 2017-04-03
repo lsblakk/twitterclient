@@ -193,6 +193,7 @@ public abstract class TweetListFragment extends Fragment {
     }
 
     public void addTweet(Tweet newTweet) {
+        Log.d("DEBUG", adapter.toString());
         if (!adapter.hasTweet(newTweet)){
             newTweet.save();
             adapter.addTweet(newTweet);

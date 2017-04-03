@@ -98,10 +98,4 @@ public class HomeTimelineFragment extends TweetListFragment {
 
     }
 
-    public void addNewTweet(Tweet newTweet) {
-        Log.d("DEBUG", newTweet.toString());
-        addTweet(newTweet);
-    }
-
-
 }

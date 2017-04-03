@@ -91,9 +91,9 @@ public class TimelineActivity extends AppCompatActivity implements ComposeTweetF
             public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
                 Tweet newTweet = Tweet.fromJSON(response);
 
-                HomeTimelineFragment fragment = (HomeTimelineFragment) tweetsPagerAdapter.getItem(0);
+                TweetListFragment fragment = (TweetListFragment) tweetsPagerAdapter.getItem(2);
                 if (fragment != null) {
-                    fragment.addNewTweet(newTweet);
+                    fragment.addTweet(newTweet);
                 }
 
             }
@@ -104,6 +104,8 @@ public class TimelineActivity extends AppCompatActivity implements ComposeTweetF
             }
         });
 
+        Intent i = new Intent(this, ProfileActivity.class);
+        startActivity(i);
     }
 
     // return the order of the fragments in the view pager
@@ -121,6 +123,13 @@ public class TimelineActivity extends AppCompatActivity implements ComposeTweetF
                 return new HomeTimelineFragment();
             } else if (position == 1) {
                 return new MentionsTimelineFragment();
+            } else if (position == 2) {
+                return new TweetListFragment() {
+                    @Override
+                    protected void populateTimeline(int page) {
+
+                    }
+                };
             } else {
                 return null;
             }
