@@ -2,14 +2,13 @@
 
 **Twitter Client** is an android app that allows a user to view home and mentions timelines, view user profiles with user timelines, as well as compose and post a new tweet. The app utilizes [Twitter REST API](https://dev.twitter.com/rest/public).
 
-Time spent: **20** hours spent in total
+Time spent: **22** hours spent in total
 
 ## User Stories
 
 The following **required** functionality is completed:
 
-* [ ] The app includes **all required user stories** from Week 3 Twitter Client
-  * Broke compose, can't fix in time.
+* [x] The app includes **all required user stories** from Week 3 Twitter Client
 * [x] User can **switch between Timeline and Mention views using tabs**
   * [x] User can view their home timeline tweets.
   * [x] User can view the recent mentions of their username.
