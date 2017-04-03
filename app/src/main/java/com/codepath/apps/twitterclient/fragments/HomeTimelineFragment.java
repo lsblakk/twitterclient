@@ -5,6 +5,8 @@ import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.design.widget.FloatingActionButton;
+import android.support.v4.app.FragmentManager;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -94,6 +96,11 @@ public class HomeTimelineFragment extends TweetListFragment {
             }
         });
 
+    }
+
+    public void addNewTweet(Tweet newTweet) {
+        Log.d("DEBUG", newTweet.toString());
+        addTweet(newTweet);
     }
 
 

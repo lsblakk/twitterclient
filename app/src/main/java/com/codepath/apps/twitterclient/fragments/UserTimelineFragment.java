@@ -37,6 +37,7 @@ public class UserTimelineFragment extends TweetListFragment {
         // Set a client for making API calls
         client = TwitterApplication.getRestClient();
 
+
         // Get the initial homefeed on load
         populateTimeline(0);
     }

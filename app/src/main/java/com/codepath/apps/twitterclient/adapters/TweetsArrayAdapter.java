@@ -19,6 +19,7 @@ import java.util.List;
 
 import jp.wasabeef.picasso.transformations.RoundedCornersTransformation;
 
+import static com.codepath.apps.twitterclient.R.id.rvTweets;
 
 
 /**
@@ -35,7 +36,7 @@ public class TweetsArrayAdapter extends RecyclerView.Adapter<TweetsArrayAdapter.
         void onItemClick(int position);
     }
 
-    public void setOnItemClickListener(OnItemClickListener listener){
+    public void setOnItemClickListener(TweetsArrayAdapter.OnItemClickListener listener){
         this.mListener = listener;
     }
 
@@ -47,7 +48,7 @@ public class TweetsArrayAdapter extends RecyclerView.Adapter<TweetsArrayAdapter.
         public TextView tvTimestamp;
         public ImageView ivProfileImage;
 
-        public ViewHolder(final View itemView, final TweetsArrayAdapter.OnItemClickListener listener) {
+        public ViewHolder(final View itemView) {
 
             super(itemView);
             tvBody = (TextView) itemView.findViewById(R.id.tvBody);
@@ -60,10 +61,10 @@ public class TweetsArrayAdapter extends RecyclerView.Adapter<TweetsArrayAdapter.
                 @Override
                 public void onClick(View v) {
                     // Triggers click upwards to the adapter on click
-                    if (listener != null) {
+                    if (mListener != null) {
                         int position = getAdapterPosition();
                         if (position != RecyclerView.NO_POSITION) {
-                            listener.loadProfileView(position);
+                            mListener.loadProfileView(position);
                         }
                     }
                 }
@@ -74,10 +75,10 @@ public class TweetsArrayAdapter extends RecyclerView.Adapter<TweetsArrayAdapter.
                 @Override
                 public void onClick(View v) {
                     // Triggers click upwards to the adapter on click
-                    if (listener != null) {
+                    if (mListener != null) {
                         int position = getAdapterPosition();
                         if (position != RecyclerView.NO_POSITION) {
-                            listener.onItemClick(position);
+                            mListener.onItemClick(position);
                         }
                     }
                 }
@@ -89,10 +90,13 @@ public class TweetsArrayAdapter extends RecyclerView.Adapter<TweetsArrayAdapter.
     private Context mContext;
 
 
+    public List<Tweet> getmTweets() {
+        return mTweets;
+    }
+
     public TweetsArrayAdapter(Context context, List<Tweet> tweets) {
         mTweets = tweets;
         mContext = context;
-        mListener = null;
     }
 
     private Context getContext() {
@@ -102,7 +106,7 @@ public class TweetsArrayAdapter extends RecyclerView.Adapter<TweetsArrayAdapter.
     @Override
     public TweetsArrayAdapter.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View tweetView = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_tweet, parent, false);
-        ViewHolder viewHolder = new ViewHolder(tweetView, mListener);
+        ViewHolder viewHolder = new ViewHolder(tweetView);
         return viewHolder;
     }
 
@@ -145,5 +149,13 @@ public class TweetsArrayAdapter extends RecyclerView.Adapter<TweetsArrayAdapter.
     public void addAll(List<Tweet> tweets) {
         mTweets.addAll(tweets);
         notifyDataSetChanged();
+    }
+
+    public void addTweet(Tweet tweet) {
+        mTweets.add(0, tweet);
+    }
+
+    public Boolean hasTweet(Tweet tweet) {
+        return mTweets.contains(tweet);
     }
 }

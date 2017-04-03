@@ -1,10 +1,12 @@
 package com.codepath.apps.twitterclient.fragments;
 
+import android.content.Context;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.annotation.Nullable;
-import android.support.design.widget.Snackbar;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.widget.SwipeRefreshLayout;
@@ -14,18 +16,19 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import com.codepath.apps.twitterclient.R;
-import com.codepath.apps.twitterclient.activities.TimelineActivity;
+import com.codepath.apps.twitterclient.TwitterApplication;
+import com.codepath.apps.twitterclient.TwitterClient;
+import com.codepath.apps.twitterclient.activities.ProfileActivity;
 import com.codepath.apps.twitterclient.adapters.TweetsArrayAdapter;
 import com.codepath.apps.twitterclient.models.Tweet;
 import com.codepath.apps.twitterclient.models.User;
 import com.codepath.apps.twitterclient.utils.DividerItemDecoration;
 import com.codepath.apps.twitterclient.utils.EndlessRecyclerViewScrollListener;
-import com.codepath.apps.twitterclient.utils.ItemClickSupport;
+import com.loopj.android.http.JsonHttpResponseHandler;
+import com.raizlabs.android.dbflow.sql.language.Condition;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -33,10 +36,7 @@ import org.parceler.Parcels;
 
 import java.util.ArrayList;
 
-import static android.media.CamcorderProfile.get;
-import static com.codepath.apps.twitterclient.R.id.tvUsername;
-import static com.codepath.apps.twitterclient.R.string.tweet;
-import static com.codepath.apps.twitterclient.models.User_Table.name;
+import cz.msebera.android.httpclient.Header;
 
 
 /**
@@ -50,14 +50,25 @@ public abstract class TweetListFragment extends Fragment {
     private SwipeRefreshLayout swipeContainer;
     private EndlessRecyclerViewScrollListener scrollListener;
     private RecyclerView rvTweets;
+    private TweetsArrayAdapter.OnItemClickListener onItemClickListener;
 
     SharedPreferences pref;
     SharedPreferences.Editor edit;
 
+    public static TweetListFragment newInstance() {
+        TweetListFragment frag = new TweetListFragment() {
+            @Override
+            protected void populateTimeline(int page) {
+
+            }
+        };
+
+        return frag;
+    }
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
         // Preference manager
         pref = PreferenceManager.getDefaultSharedPreferences(getActivity());
         edit = pref.edit();
@@ -67,11 +78,15 @@ public abstract class TweetListFragment extends Fragment {
 
         tweets = new ArrayList<>();
         adapter = new TweetsArrayAdapter(getActivity(), tweets);
-        adapter.setOnItemClickListener(new TweetsArrayAdapter.OnItemClickListener() {
+        onItemClickListener = new TweetsArrayAdapter.OnItemClickListener() {
             @Override
             public void loadProfileView(int position) {
+                // reset maxID whenever clicking on a new user profile
+                edit.putLong("max_id", 1);
                 User user = tweets.get(position).getUser();
-                Toast.makeText(getContext(), user.getScreenname() + " was clicked", Toast.LENGTH_SHORT).show();
+                Intent intent = new Intent(getActivity(), ProfileActivity.class);
+                intent.putExtra("user", Parcels.wrap(user));
+                startActivity(intent);
             }
             @Override
             public void onItemClick(int position) {
@@ -83,7 +98,8 @@ public abstract class TweetListFragment extends Fragment {
                 tweetDetailFragment.show(fm, "fragment_tweet_detail");
 
             }
-        });
+        };
+        adapter.setOnItemClickListener(onItemClickListener);
 
     }
 
@@ -111,6 +127,7 @@ public abstract class TweetListFragment extends Fragment {
                 //populateTimeline(-1);
             }
         });
+
 
         scrollListener = new EndlessRecyclerViewScrollListener(layoutManager) {
             @Override
@@ -146,8 +163,10 @@ public abstract class TweetListFragment extends Fragment {
     public void notifyDataSetChanged() { adapter.notifyDataSetChanged(); }
 
     public void addAllNew(JSONArray json) {
+        adapter.clear();
         tweets.addAll(Tweet.fromJSONArray(json));
-        adapter = new TweetsArrayAdapter(getActivity(), tweets);
+        adapter.addAll(tweets);
+        //adapter = new TweetsArrayAdapter(getActivity(), tweets);
         rvTweets.setAdapter(adapter);
     }
 
@@ -157,20 +176,12 @@ public abstract class TweetListFragment extends Fragment {
     }
 
     public void getOfflineTweets() {
+        adapter.clear();
         tweets = Tweet.fetchDBTweets();
-        adapter = new TweetsArrayAdapter(getActivity(), tweets);
+        adapter.addAll(tweets);
         rvTweets.setAdapter(adapter);
         // a visual for "offline" mode
         // Snackbar.make(findViewById(android.R.id.content), "Currently offline - no new tweets to show", Snackbar.LENGTH_LONG).show();
-    }
-
-
-    public void finishCompose(JSONObject json){
-        // Insert the tweet into rvTweets and scroll to top
-        Tweet tweet = Tweet.fromJSON(json);
-        tweets.add(0, tweet);
-        adapter.notifyItemInserted(0);
-        rvTweets.scrollToPosition(0);
     }
 
     public void resetState() {
@@ -180,5 +191,15 @@ public abstract class TweetListFragment extends Fragment {
     public void setRefreshing(Boolean refreshing){
         swipeContainer.setRefreshing(refreshing);
     }
+
+    public void addTweet(Tweet newTweet) {
+        if (!adapter.hasTweet(newTweet)){
+            newTweet.save();
+            adapter.addTweet(newTweet);
+            adapter.notifyItemInserted(0);
+            rvTweets.scrollToPosition(0);
+        }
+    }
+
 
 }

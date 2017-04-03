@@ -1,8 +1,10 @@
 package com.codepath.apps.twitterclient.activities;
 
+import android.os.Parcel;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.ImageView;
@@ -13,12 +15,14 @@ import com.codepath.apps.twitterclient.R;
 import com.codepath.apps.twitterclient.TwitterApplication;
 import com.codepath.apps.twitterclient.TwitterClient;
 import com.codepath.apps.twitterclient.fragments.TweetDetailFragment;
+import com.codepath.apps.twitterclient.fragments.TweetListFragment;
 import com.codepath.apps.twitterclient.fragments.UserTimelineFragment;
 import com.codepath.apps.twitterclient.models.User;
 import com.loopj.android.http.JsonHttpResponseHandler;
 import com.squareup.picasso.Picasso;
 
 import org.json.JSONObject;
+import org.parceler.Parcels;
 
 import cz.msebera.android.httpclient.Header;
 
@@ -31,50 +35,53 @@ public class ProfileActivity extends AppCompatActivity implements TweetDetailFra
     User user;
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
+    protected void onCreate(final Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_profile);
         client = TwitterApplication.getRestClient();
-        // Getting user account info
-        client.getUserInfo(new JsonHttpResponseHandler(){
-            @Override
-            public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
-                user = User.fromJSON(response);
-                getSupportActionBar().setTitle(user.getScreenname());
-                populateProfileHeader(user);
+
+        if (getIntent().hasExtra("user")) {
+            user = Parcels.unwrap(getIntent().getParcelableExtra("user"));
+            getSupportActionBar().setTitle(user.getScreenname());
+            populateProfileHeader(user);
+            if (savedInstanceState == null) {
+                // Create the UserTimelineFragment
+                UserTimelineFragment fragmentUserTimeline = UserTimelineFragment.newInstance(user.getScreenname());
+                // Display the UserFragment within this activity dynamically
+                FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
+                ft.replace(R.id.flContainer, fragmentUserTimeline);
+                ft.commit();
             }
 
-            @Override
-            public void onFailure(int statusCode, Header[] headers, String responseString, Throwable throwable) {
-                super.onFailure(statusCode, headers, responseString, throwable);
-            }
-        });
+        } else {
+            // Getting app user account info
+            client.getUserInfo(new JsonHttpResponseHandler(){
+                @Override
+                public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
+                    user = User.fromJSON(response);
+                    getSupportActionBar().setTitle(user.getScreenname());
+                    populateProfileHeader(user);
 
-        // Get the screen name
-        String screenName = getIntent().getStringExtra(String.valueOf(R.string.screen_name));
+                    if (savedInstanceState == null) {
+                        // Create the UserTimelineFragment
+                        UserTimelineFragment fragmentUserTimeline = UserTimelineFragment.newInstance(user.getScreenname());
+                        // Display the UserFragment within this activity dynamically
+                        FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
+                        ft.replace(R.id.flContainer, fragmentUserTimeline);
+                        ft.commit();
+                    }
+                }
 
-        // Getting user banner
-        client.getUserBanner(screenName, new JsonHttpResponseHandler(){
-            @Override
-            public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
-                // grab the banner url here and put it into the imageView
-            }
-
-            @Override
-            public void onFailure(int statusCode, Header[] headers, String responseString, Throwable throwable) {
-                super.onFailure(statusCode, headers, responseString, throwable);
-            }
-        });
+                @Override
+                public void onFailure(int statusCode, Header[] headers, String responseString, Throwable throwable) {
+                    super.onFailure(statusCode, headers, responseString, throwable);
+                }
+            });
 
 
-        if (savedInstanceState == null) {
-            // Create the UserTimelineFragment
-            UserTimelineFragment fragmentUserTimeline = UserTimelineFragment.newInstance(screenName);
-            // Display the UserFragment within this activity dynamically
-            FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
-            ft.replace(R.id.flContainer, fragmentUserTimeline);
-            ft.commit();
         }
+
+
     }
 
     private void populateProfileHeader(User user) {
@@ -111,4 +118,5 @@ public class ProfileActivity extends AppCompatActivity implements TweetDetailFra
     public void onCloseTweetDetail() {
         // nothing to do here right now
     }
+
 }

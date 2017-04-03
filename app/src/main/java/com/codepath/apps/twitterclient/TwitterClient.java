@@ -105,7 +105,7 @@ public class TwitterClient extends OAuthBaseClient {
             String apiUrl = getApiUrl("statuses/user_timeline.json");
             RequestParams params = new RequestParams();
             params.put("count", 25);
-            params.put(String.valueOf(R.string.screen_name), screenName);
+            params.put("screen_name", screenName);
 
             // Use since_id to hold the processed tweets and max_id to hold the
             long maxId = pref.getLong("max_id", 1);
@@ -131,19 +131,6 @@ public class TwitterClient extends OAuthBaseClient {
             Log.d("DEBUG", getClass().getName().toString() + " : either no network or offline");
         }
     }
-
-    public void getUserBanner(String screenName, AsyncHttpResponseHandler handler){
-        if (isNetworkAvailable() && isOnline()) {
-           // GET https://api.twitter.com/1.1/users/profile_banner.json?screen_name=twitterapi
-            String apiUrl = getApiUrl("users/profile_banner.json");
-            RequestParams  params = new RequestParams();
-            params.put("screen_name", screenName);
-            client.get(apiUrl, null, handler);
-        } else {
-            Log.d("DEBUG", getClass().getName().toString() + " : either no network or offline");
-        }
-    }
-
 
     public void composeTweet(String message, AsyncHttpResponseHandler handler) {
         if (isNetworkAvailable() && isOnline()) {
