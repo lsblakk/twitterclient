@@ -9,6 +9,7 @@ Time spent: **X** hours spent in total
 The following **required** functionality is completed:
 
 * [ ] The app includes **all required user stories** from Week 3 Twitter Client
+  * Broke compose, can't fix in time.
 * [x] User can **switch between Timeline and Mention views using tabs**
   * [x] User can view their home timeline tweets.
   * [x] User can view the recent mentions of their username.
@@ -46,7 +47,7 @@ The following **additional** features are implemented:
 
 Here's a walkthrough of implemented user stories:
 
-<img src='http://i.imgur.com/link/to/your/gif/file.gif' title='Video Walkthrough' width='' alt='Video Walkthrough' />
+<img src='https://github.com/lsblakk/twitterclient/blob/master/assignment4_walkthrough.gif' title='Video Walkthrough' width='' alt='Video Walkthrough' />
 
 GIF created with [LiceCap](http://www.cockos.com/licecap/).
 

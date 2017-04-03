@@ -55,17 +55,6 @@ public abstract class TweetListFragment extends Fragment {
     SharedPreferences pref;
     SharedPreferences.Editor edit;
 
-    public static TweetListFragment newInstance() {
-        TweetListFragment frag = new TweetListFragment() {
-            @Override
-            protected void populateTimeline(int page) {
-
-            }
-        };
-
-        return frag;
-    }
-
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);

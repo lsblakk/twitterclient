@@ -59,11 +59,11 @@ public class TwitterClient extends OAuthBaseClient {
             String apiUrl = getApiUrl("statuses/home_timeline.json");
             RequestParams params = new RequestParams();
             // A "page" will be 25 tweets
-            params.put("count", 50);
+            params.put("count", 25);
 
             // Use since_id to hold the processed tweets and max_id to hold the
             long maxId = pref.getLong("max_id", 1);
-            if (page == -1) {
+            if (page == -1 || page == 0) {
                 // Refresh want the newest tweets
                 params.put("since_id", 1);
             }
@@ -86,7 +86,7 @@ public class TwitterClient extends OAuthBaseClient {
 
             // Use since_id to hold the processed tweets and max_id to hold the
             long maxId = pref.getLong("max_id", 1);
-            if (page == -1) {
+            if (page == -1 || page == 0) {
                 // Refresh want the newest tweets
                 params.put("since_id", 1);
             }
@@ -109,7 +109,7 @@ public class TwitterClient extends OAuthBaseClient {
 
             // Use since_id to hold the processed tweets and max_id to hold the
             long maxId = pref.getLong("max_id", 1);
-            if (page == -1) {
+            if (page == -1 || page == 0) {
                 // Refresh want the newest tweets
                 params.put("since_id", 1);
             }
