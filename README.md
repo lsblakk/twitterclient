@@ -46,7 +46,7 @@ The following **additional** features are implemented:
 
 Here's a walkthrough of implemented user stories:
 
-<img src='https://github.com/lsblakk/twitterclient/blob/master/assignment4_walkthrough.gif' title='Video Walkthrough' width='' alt='Video Walkthrough' />
+<img src='https://github.com/lsblakk/twitterclient/blob/master/assignment4_walkthrough_final.gif' title='Video Walkthrough' width='' alt='Video Walkthrough' />
 
 GIF created with [LiceCap](http://www.cockos.com/licecap/).
 
