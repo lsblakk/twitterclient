@@ -12,12 +12,13 @@ import android.widget.TextView;
 
 import com.codepath.apps.twitterclient.R;
 import com.codepath.apps.twitterclient.models.Tweet;
-import com.codepath.apps.twitterclient.utils.ItemClickSupport;
+import com.codepath.apps.twitterclient.models.User;
 import com.squareup.picasso.Picasso;
 
 import java.util.List;
 
 import jp.wasabeef.picasso.transformations.RoundedCornersTransformation;
+
 
 
 /**
@@ -30,15 +31,15 @@ public class TweetsArrayAdapter extends RecyclerView.Adapter<TweetsArrayAdapter.
     private OnItemClickListener mListener;
 
     public interface OnItemClickListener {
-        void loadProfileView(String username);
-        void onItemClick(View itemView, int position);
+        void loadProfileView(int position);
+        void onItemClick(int position);
     }
 
     public void setOnItemClickListener(OnItemClickListener listener){
         this.mListener = listener;
     }
 
-    public class ViewHolder extends RecyclerView.ViewHolder {
+    public class ViewHolder extends RecyclerView.ViewHolder{
 
         public TextView tvBody;
         public TextView tvUsername;
@@ -46,7 +47,7 @@ public class TweetsArrayAdapter extends RecyclerView.Adapter<TweetsArrayAdapter.
         public TextView tvTimestamp;
         public ImageView ivProfileImage;
 
-        public ViewHolder(final View itemView) {
+        public ViewHolder(final View itemView, final TweetsArrayAdapter.OnItemClickListener listener) {
 
             super(itemView);
             tvBody = (TextView) itemView.findViewById(R.id.tvBody);
@@ -55,15 +56,28 @@ public class TweetsArrayAdapter extends RecyclerView.Adapter<TweetsArrayAdapter.
             tvTimestamp = (TextView) itemView.findViewById(R.id.tvTimestamp);
             ivProfileImage = (ImageView) itemView.findViewById(R.id.ivProfileImage);
 
-            // Setup the click listener
-            itemView.setOnClickListener(new View.OnClickListener() {
+            ivProfileImage.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     // Triggers click upwards to the adapter on click
-                    if (mListener != null) {
+                    if (listener != null) {
                         int position = getAdapterPosition();
                         if (position != RecyclerView.NO_POSITION) {
-                            mListener.onItemClick(itemView, position);
+                            listener.loadProfileView(position);
+                        }
+                    }
+                }
+            });
+
+            // Setup the click listener
+            tvBody.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    // Triggers click upwards to the adapter on click
+                    if (listener != null) {
+                        int position = getAdapterPosition();
+                        if (position != RecyclerView.NO_POSITION) {
+                            listener.onItemClick(position);
                         }
                     }
                 }
@@ -88,7 +102,7 @@ public class TweetsArrayAdapter extends RecyclerView.Adapter<TweetsArrayAdapter.
     @Override
     public TweetsArrayAdapter.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View tweetView = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_tweet, parent, false);
-        ViewHolder viewHolder = new ViewHolder(tweetView);
+        ViewHolder viewHolder = new ViewHolder(tweetView, mListener);
         return viewHolder;
     }
 
