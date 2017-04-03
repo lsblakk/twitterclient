@@ -50,6 +50,7 @@
         android:layout_height="wrap_content"
         android:layout_marginBottom="10dp"
         android:layout_below="@id/rlUserHeader"
+        android:layout_marginLeft="5dp"
         android:orientation="horizontal"
         android:id="@+id/llCounts">
 

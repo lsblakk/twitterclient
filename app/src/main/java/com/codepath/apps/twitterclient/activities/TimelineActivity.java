@@ -25,6 +25,7 @@ import com.codepath.apps.twitterclient.fragments.TweetDetailFragment;
 import com.codepath.apps.twitterclient.fragments.TweetListFragment;
 import com.codepath.apps.twitterclient.models.Tweet;
 import com.codepath.apps.twitterclient.models.User;
+import com.codepath.apps.twitterclient.utils.SmartFragmentStatePagerAdapter;
 import com.loopj.android.http.JsonHttpResponseHandler;
 
 import org.json.JSONObject;
@@ -39,6 +40,7 @@ public class TimelineActivity extends AppCompatActivity implements ComposeTweetF
 
     private TwitterClient client;
     private TweetsPagerAdapter tweetsPagerAdapter;
+    private ViewPager viewPager;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -46,7 +48,7 @@ public class TimelineActivity extends AppCompatActivity implements ComposeTweetF
         setContentView(R.layout.activity_timeline);
         client = TwitterApplication.getRestClient();
         // get the view pager & tab layout
-        ViewPager viewPager = (ViewPager) findViewById(R.id.viewpager);
+        viewPager = (ViewPager) findViewById(R.id.viewpager);
         tweetsPagerAdapter = new TweetsPagerAdapter(getSupportFragmentManager());
         viewPager.setAdapter(tweetsPagerAdapter);
         PagerSlidingTabStrip tabStrip = (PagerSlidingTabStrip) findViewById(R.id.tabs);
@@ -90,12 +92,9 @@ public class TimelineActivity extends AppCompatActivity implements ComposeTweetF
             @Override
             public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
                 Tweet newTweet = Tweet.fromJSON(response);
-
-                TweetListFragment fragment = (TweetListFragment) tweetsPagerAdapter.getItem(2);
-                if (fragment != null) {
-                    fragment.addTweet(newTweet);
-                }
-
+                HomeTimelineFragment fragment = (HomeTimelineFragment) tweetsPagerAdapter.getRegisteredFragment(0);
+                fragment.addTweet(newTweet);
+                viewPager.setCurrentItem(0);
             }
 
             @Override
@@ -103,13 +102,10 @@ public class TimelineActivity extends AppCompatActivity implements ComposeTweetF
                 Log.d("ERROR", errorResponse.toString());
             }
         });
-
-        Intent i = new Intent(this, ProfileActivity.class);
-        startActivity(i);
     }
 
     // return the order of the fragments in the view pager
-    public class TweetsPagerAdapter extends FragmentPagerAdapter {
+    public class TweetsPagerAdapter extends SmartFragmentStatePagerAdapter {
         final int PAGE_COUNT = 2;
         private String tabTitles[] = { "Home", "Mentions" };
 
@@ -123,13 +119,6 @@ public class TimelineActivity extends AppCompatActivity implements ComposeTweetF
                 return new HomeTimelineFragment();
             } else if (position == 1) {
                 return new MentionsTimelineFragment();
-            } else if (position == 2) {
-                return new TweetListFragment() {
-                    @Override
-                    protected void populateTimeline(int page) {
-
-                    }
-                };
             } else {
                 return null;
             }

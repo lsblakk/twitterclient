@@ -113,7 +113,7 @@ public abstract class TweetListFragment extends Fragment {
         swipeContainer.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
-                //populateTimeline(-1);
+                populateTimeline(-1);
             }
         });
 
